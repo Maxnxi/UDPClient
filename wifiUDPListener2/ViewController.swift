@@ -11,9 +11,9 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var hexToParseBinTxtField: UITextField!
     
-    //var socketGateway: SocketGateway?
+    var socketGateway: SocketGateway?
     
-    var socket2: SocketUDP2?
+    //var socket2: SocketUDP2?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,9 +32,8 @@ class ViewController: UIViewController {
 //        socketGateway?.startSend()
         
         //version 2
-       let socket = SocketGateway(messageArr: messArr) {
-            print("Send done - Close connection - deinit")
-        }
+        socketGateway = SocketGateway(messageArr: messArr)
+        socketGateway?.startSend()
         
 
         
@@ -48,10 +47,8 @@ class ViewController: UIViewController {
     @IBAction func deleteAllImagesBtnWasPressed(_ sender: Any) {
         
         let deleteMessage = deleteAllImagesCommand
-        SocketGateway(messageArr: deleteMessage) {
-            print("Send done - Close connection - deinit")
-        }
-        //socketGateway.startSend()
+        socketGateway = SocketGateway(messageArr: deleteMessage)
+        socketGateway?.startSend()
     }
     
 }

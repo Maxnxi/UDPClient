@@ -92,13 +92,13 @@ class SocketGateway {
     }
     
     //main
-    init(messageArr: [String], completion: @escaping() -> Void) {
+    init(messageArr: [String]) {
         
         self.messageArr = messageArr
-        
         self.totalCountOfPackets = messageArr.count
+        
         socket = SocketUDP()
-        startSend()
+
         print("Inited")
 //        repeat {
 //            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
