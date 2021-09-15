@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="wifiUDPListener2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TQj-tV-F9N">
+                                <rect key="frame" x="20" y="425.5" width="374" height="45"/>
+                                <color key="backgroundColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="aRV-Ex-zzW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <state key="normal" title="SEND">
+                                    <color key="titleColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendBtnWasPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9QB-Lk-1oc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KzP-jh-St8">
+                                <rect key="frame" x="20" y="781" width="374" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="Z3R-fY-9y7"/>
+                                </constraints>
+                                <state key="normal" title="Удалить все картинки"/>
+                                <connections>
+                                    <action selector="deleteAllImagesBtnWasPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="agJ-HT-Z5e"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter hex to parseBin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WgV-xe-qvY">
+                                <rect key="frame" x="126" y="57" width="162" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uM6-RE-yT4">
+                                <rect key="frame" x="20" y="142" width="374" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="uYh-d1-SFI"/>
+                                </constraints>
+                                <state key="normal" title="DO parseBin"/>
+                                <connections>
+                                    <action selector="doParseBinBttnWasPrssd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6gJ-VB-eF5"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FPU-or-WYw">
+                                <rect key="frame" x="20" y="88" width="374" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="xJ5-Op-dGf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IWN-Vo-W4v">
+                                <rect key="frame" x="20" y="731" width="374" height="30"/>
+                                <state key="normal" title="Force cancel"/>
+                                <connections>
+                                    <action selector="forceCancelWasPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1pe-CB-fMU"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KzP-jh-St8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6Xu-H6-7tO"/>
+                            <constraint firstItem="uM6-RE-yT4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6mq-AE-4t6"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="uM6-RE-yT4" secondAttribute="trailing" constant="20" id="9S5-U0-jN5"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="IWN-Vo-W4v" secondAttribute="trailing" constant="20" id="ERv-wL-CVa"/>
+                            <constraint firstItem="WgV-xe-qvY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GMj-4a-d1U"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="KzP-jh-St8" secondAttribute="bottom" constant="36" id="HbB-5z-fDx"/>
+                            <constraint firstItem="WgV-xe-qvY" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="13" id="PZG-02-ovT"/>
+                            <constraint firstItem="KzP-jh-St8" firstAttribute="top" secondItem="IWN-Vo-W4v" secondAttribute="bottom" constant="20" id="PmQ-l0-r63"/>
+                            <constraint firstItem="FPU-or-WYw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="V6F-20-GAs"/>
+                            <constraint firstItem="uM6-RE-yT4" firstAttribute="top" secondItem="FPU-or-WYw" secondAttribute="bottom" constant="20" id="ZdN-Jq-ZnD"/>
+                            <constraint firstItem="FPU-or-WYw" firstAttribute="top" secondItem="WgV-xe-qvY" secondAttribute="bottom" constant="10" id="dJs-0X-wRE"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TQj-tV-F9N" secondAttribute="trailing" constant="20" id="dh9-1c-aIa"/>
+                            <constraint firstItem="TQj-tV-F9N" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fFo-UV-NYh"/>
+                            <constraint firstItem="TQj-tV-F9N" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fpw-RM-1yg"/>
+                            <constraint firstItem="TQj-tV-F9N" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="gwo-NG-rXf"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FPU-or-WYw" secondAttribute="trailing" constant="20" id="l4S-HU-cRf"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="KzP-jh-St8" secondAttribute="trailing" constant="20" id="w2V-z5-aAR"/>
+                            <constraint firstItem="IWN-Vo-W4v" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="yha-VU-uYv"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="hexToParseBinTxtField" destination="FPU-or-WYw" id="IoD-Bf-gyP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="21.739130434782609" y="88.392857142857139"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
