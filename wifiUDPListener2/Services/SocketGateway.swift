@@ -70,7 +70,7 @@ class SocketGateway {
             if currentState == .readyToSend {
                 isPaused = false
                 if numberOfPacket == totalCountOfPackets {
-                    finish()
+                    finishState()
                 } else {
                     print("Ready To send")
                     send(nmbrPckt: numberOfPacket)
@@ -137,6 +137,10 @@ class SocketGateway {
         errorCounter += 1
         isPaused = false
         //pauseTimer.invalidate()
+    }
+    
+    func finishState() {
+        currentState = .finish
     }
     
     func finish() {
