@@ -20,6 +20,7 @@
 		055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDD26EF0FEC003C0515 /* IntReader.swift */; };
 		055EEBE026EF11F6003C0515 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDF26EF11F6003C0515 /* Extension.swift */; };
 		055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBE126EF76B6003C0515 /* SocketUDP2Broadcast.swift */; };
+		0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576CDEE26F35D0D00A62B7C /* CodeLib.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		055EEBDD26EF0FEC003C0515 /* IntReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntReader.swift; sourceTree = "<group>"; };
 		055EEBDF26EF11F6003C0515 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		055EEBE126EF76B6003C0515 /* SocketUDP2Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketUDP2Broadcast.swift; sourceTree = "<group>"; };
+		0576CDEE26F35D0D00A62B7C /* CodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeLib.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				055EEBDB26EF0FBA003C0515 /* DecodeLib.swift */,
 				055EEBDD26EF0FEC003C0515 /* IntReader.swift */,
 				055EEBDF26EF11F6003C0515 /* Extension.swift */,
+				0576CDEE26F35D0D00A62B7C /* CodeLib.swift */,
 			);
 			path = tlv;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */,
 				0503A21126EC9E90001BE3AD /* ViewController.swift in Sources */,
 				055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */,
+				0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */,
 				0503A20D26EC9E90001BE3AD /* AppDelegate.swift in Sources */,
 				0503A20F26EC9E90001BE3AD /* SceneDelegate.swift in Sources */,
 			);
