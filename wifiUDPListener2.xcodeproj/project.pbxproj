@@ -20,6 +20,8 @@
 		055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDD26EF0FEC003C0515 /* IntReader.swift */; };
 		055EEBE026EF11F6003C0515 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDF26EF11F6003C0515 /* Extension.swift */; };
 		055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBE126EF76B6003C0515 /* SocketUDP2Broadcast.swift */; };
+		056A5A7626F488470069A12B /* pokemon7.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 056A5A7526F488470069A12B /* pokemon7.bmp */; };
+		056A5A7826F48C350069A12B /* PacketToSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A5A7726F48C350069A12B /* PacketToSend.swift */; };
 		0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576CDEE26F35D0D00A62B7C /* CodeLib.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +41,8 @@
 		055EEBDD26EF0FEC003C0515 /* IntReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntReader.swift; sourceTree = "<group>"; };
 		055EEBDF26EF11F6003C0515 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		055EEBE126EF76B6003C0515 /* SocketUDP2Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketUDP2Broadcast.swift; sourceTree = "<group>"; };
+		056A5A7526F488470069A12B /* pokemon7.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = pokemon7.bmp; sourceTree = "<group>"; };
+		056A5A7726F48C350069A12B /* PacketToSend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketToSend.swift; sourceTree = "<group>"; };
 		0576CDEE26F35D0D00A62B7C /* CodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeLib.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,6 +78,8 @@
 			children = (
 				0503A20C26EC9E90001BE3AD /* AppDelegate.swift */,
 				0503A20E26EC9E90001BE3AD /* SceneDelegate.swift */,
+				056A5A7526F488470069A12B /* pokemon7.bmp */,
+				056A5A7726F48C350069A12B /* PacketToSend.swift */,
 				0503A21026EC9E90001BE3AD /* ViewController.swift */,
 				0503A22226EC9F7F001BE3AD /* Services */,
 				0503A21226EC9E90001BE3AD /* Main.storyboard */,
@@ -165,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0503A21926EC9E93001BE3AD /* LaunchScreen.storyboard in Resources */,
+				056A5A7626F488470069A12B /* pokemon7.bmp in Resources */,
 				0503A21626EC9E93001BE3AD /* Assets.xcassets in Resources */,
 				0503A21426EC9E90001BE3AD /* Main.storyboard in Resources */,
 			);
@@ -187,6 +194,7 @@
 				055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */,
 				0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */,
 				0503A20D26EC9E90001BE3AD /* AppDelegate.swift in Sources */,
+				056A5A7826F48C350069A12B /* PacketToSend.swift in Sources */,
 				0503A20F26EC9E90001BE3AD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

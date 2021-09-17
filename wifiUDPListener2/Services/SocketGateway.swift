@@ -145,7 +145,12 @@ class SocketGateway {
     
     func finish() {
         print("Finished sending Packs")
-        socket?.closeSocket()
+        //socket?.closeSocket()
+        guard let scket = socket else {
+            print("Error in close func in SocketGateway")
+            return
+        }
+        scket.closeSocket()
     }
     
     func finishWithError() {
@@ -158,6 +163,8 @@ class SocketGateway {
         errorCounter = 0
         inceptionCounter += 1
     }
+    
+
     
 }
 

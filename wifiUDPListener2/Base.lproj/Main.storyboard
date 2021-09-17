@@ -72,16 +72,33 @@
                                     <action selector="forceCancelWasPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1pe-CB-fMU"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mwl-OU-ygl">
+                                <rect key="frame" x="20" y="360.5" width="374" height="45"/>
+                                <color key="backgroundColor" name="AccentColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="uUY-s7-BZb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <state key="normal" title="Create Binary and Send">
+                                    <color key="titleColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="createBinaryAndSendBttnWasPrssd:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DpW-tM-iOh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KzP-jh-St8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6Xu-H6-7tO"/>
                             <constraint firstItem="uM6-RE-yT4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6mq-AE-4t6"/>
+                            <constraint firstItem="Mwl-OU-ygl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="9QF-Ya-IGs"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="uM6-RE-yT4" secondAttribute="trailing" constant="20" id="9S5-U0-jN5"/>
+                            <constraint firstItem="TQj-tV-F9N" firstAttribute="top" secondItem="Mwl-OU-ygl" secondAttribute="bottom" constant="20" id="9my-3A-J0S"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="IWN-Vo-W4v" secondAttribute="trailing" constant="20" id="ERv-wL-CVa"/>
                             <constraint firstItem="WgV-xe-qvY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GMj-4a-d1U"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="KzP-jh-St8" secondAttribute="bottom" constant="36" id="HbB-5z-fDx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mwl-OU-ygl" secondAttribute="trailing" constant="20" id="OXm-oc-aIz"/>
                             <constraint firstItem="WgV-xe-qvY" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="13" id="PZG-02-ovT"/>
                             <constraint firstItem="KzP-jh-St8" firstAttribute="top" secondItem="IWN-Vo-W4v" secondAttribute="bottom" constant="20" id="PmQ-l0-r63"/>
                             <constraint firstItem="FPU-or-WYw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="V6F-20-GAs"/>

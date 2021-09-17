@@ -115,16 +115,19 @@ class SocketUDP {
               }
           }
         
-    func closeSocket() {
-        connection.cancel()
-        
-//        connection?.stateUpdateHandler = nil
-//        connection?.viabilityUpdateHandler = nil
-//        connection?.betterPathUpdateHandler = nil
-//        connection?.pathUpdateHandler = nil
-//                if connection?.state != .cancelled {
-//                    connection?.cancel()
-//                }
+    public func closeSocket() {
+        //connection.cancel()
+        guard let tmpConnection = connection else {
+            print("Error in closeSocket")
+            return
+        }
+        tmpConnection.stateUpdateHandler = nil
+        tmpConnection.viabilityUpdateHandler = nil
+        tmpConnection.betterPathUpdateHandler = nil
+        tmpConnection.pathUpdateHandler = nil
+                if tmpConnection.state != .cancelled {
+                    tmpConnection.cancel()
+                }
             
     }
     

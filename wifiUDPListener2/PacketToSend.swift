@@ -1,0 +1,94 @@
+//
+//  PacketToSend.swift
+//  wifiUDPListener2
+//
+//  Created by Maksim on 17.09.2021.
+//
+
+import Foundation
+
+enum TypeOfPacket {
+    case devInfo, paramDev, pktsProgram
+}
+
+class CreateBinaryPacketToSend {
+    let type: TypeOfPacket
+    var dictionaryTmp: [String: Any] = [:]
+    
+    init(type: TypeOfPacket){
+        self.type = type
+        if type == .devInfo {
+            self.dictionaryTmp = devInfoRequest
+        } else if type == .paramDev {
+            self.dictionaryTmp = paramDevInfo
+        } else if type == .pktsProgram {
+            self.dictionaryTmp = pktsProgram
+        }
+    }
+    
+    func createBinaryString() -> [String] {
+        var stringArr: [String] = []
+        if 
+        return stringArr
+    }
+}
+
+let devInfoRequest = [
+                    "cmd": [
+                        "get": "dev_info"
+                        ]
+                    ]
+
+let paramDevInfo: [String: Any] = [
+                    "cmd": [
+                        "get": "param_dev"
+                        ],
+                        "ids_dev": "4195311083",
+                        "sno": 2
+                    ]
+let pktsProgram: [String: Any] = [
+                    "ids_dev": "4195311083",
+                    "pkts_program": [
+                        "id_pro": 1,
+                        "list_region": [
+                            [
+                                "info_pos": [
+                                    "h": 64,
+                                    "w": 64,
+                                    "x": 0,
+                                    "y": 0
+                                ],
+                                "list_item": [
+                                [
+                                    "info_animate": [
+                                        "model_normal": 1,
+                                        "speed": 10,
+                                        "time_stay": 3
+                                    ],
+                                    "info_border": [
+                                        "fixed_value": 0,
+                                        "type": "fixed"
+                                    ],
+                                    "isGif": 0,
+                                    "type_item": "graphic",
+                                    "zip_bmp": " "
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "property_pro": [
+                            "gray": 4,
+                            "height": 64,
+                            "play_loop": 1,
+                            "send_gif_src": 0,
+                            "time_sync": 3,
+                            "time_sync_ex": 0,
+                            "type_bg": 0,
+                            "type_color": 3,
+                            "type_pro": 0,
+                            "width": 64
+                        ]
+                    ],
+                    "sno": 4294901762
+                ]
+

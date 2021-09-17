@@ -25,17 +25,15 @@ class ViewController: UIViewController {
         DecodeLib.shared.parseBinAndReturnView(string: packetToParseBin)
     }
     
+    @IBAction func createBinaryAndSendBttnWasPrssd(_ sender: Any) {
+        
+    }
+    
     @IBAction func sendBtnWasPressed(_ sender: Any) {
         let messArr = testSendImg
-        //version 1
-//        socketGateway = SocketGateway(messageArr: messArr)
-//        socketGateway?.startSend()
         
-        //version 2
         socketGateway = SocketGateway(messageArr: messArr)
         socketGateway?.startSend()
-        
-
         
         
     }
