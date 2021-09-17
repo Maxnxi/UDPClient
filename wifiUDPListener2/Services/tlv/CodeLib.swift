@@ -7,8 +7,8 @@
 
 import Foundation
 
-final class BackPackLibrary: IntReader {
-    static let shared = BackPackLibrary()
+final class CodeLib: IntReader {
+    static let shared = CodeLib()
     
     private let commandToCode: [String: Any] = [
         "param_net": 0x01,

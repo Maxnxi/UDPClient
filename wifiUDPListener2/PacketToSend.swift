@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum TypeOfPacket {
     case devInfo, paramDev, pktsProgram
@@ -14,9 +15,16 @@ enum TypeOfPacket {
 class CreateBinaryPacketToSend {
     let type: TypeOfPacket
     var dictionaryTmp: [String: Any] = [:]
+    var idsDev: Int
+    var imageBMP: UIImage? // todo check if BMP
+    var imageString64: String?
     
-    init(type: TypeOfPacket){
+    init(type: TypeOfPacket, ids: Int = 4195311083, imageBMP: UIImage = UIImage()){
         self.type = type
+        self.idsDev = ids
+        self.imageBMP = imageBMP
+        let imageData: Data = imageBMP.toData(
+            //MARK: -> stopped here
         if type == .devInfo {
             self.dictionaryTmp = devInfoRequest
         } else if type == .paramDev {
@@ -28,7 +36,24 @@ class CreateBinaryPacketToSend {
     
     func createBinaryString() -> [String] {
         var stringArr: [String] = []
-        if 
+        if type == .devInfo {
+            var sno = 4294901762
+            let result = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+        } else if type == .paramDev {
+            let idDevice = String(describing: idsDev)
+            print("id`Device is - ", idDevice)
+            dictionaryTmp["ids_dev"] = idDevice
+            var sno = 4294901762
+            let result = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+        } else if type == .pktsProgram {
+            let idDevice = String(describing: idsDev)
+            print("id`Device is - ", idDevice)
+            dictionaryTmp["ids_dev"] = idDevice
+            let image
+            dictionaryTmp["pkts_program"]["list_region"].first["list_item"].first["zip_bmp"] = image
+            var sno = 4294901762
+            let result = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+        }
         return stringArr
     }
 }
@@ -43,8 +68,8 @@ let paramDevInfo: [String: Any] = [
                     "cmd": [
                         "get": "param_dev"
                         ],
-                        "ids_dev": "4195311083",
-                        "sno": 2
+                    "ids_dev": "4195311083",
+                    "sno": 2
                     ]
 let pktsProgram: [String: Any] = [
                     "ids_dev": "4195311083",
