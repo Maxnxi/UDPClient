@@ -13,23 +13,19 @@ enum TypeOfPacket {
 }
 
 class CreateBinaryPacketToSend {
-    let type: TypeOfPacket
+    //let type: TypeOfPacket
     var dictionaryTmp: [String: Any] = [:]
-    var idsDev: Int
-    var imageBMP: UIImage? // todo check if BMP
-    var imageString64: String?
-    var sno: Int = 0
+    //var idsDev: Int
+    //var imageBMP: UIImage? // todo check if BMP
+    //var imageString64: String?
+    //var sno: Int = 0
 
     
-    init(type: TypeOfPacket, sno: Int = 4294901762, ids: Int = 4195311083, imageBMP: UIImage = UIImage()){
-        self.type = type
-        self.idsDev = ids
-        self.sno = sno
-        //convert image to base64String
-        self.imageBMP = imageBMP
-        guard let imageData: Data = imageBMP.toData(options: [:], type: .bmp) else { return }
-        self.imageString64 = imageData.base64EncodedString()
-        //
+    init(type: TypeOfPacket) { //sno: Int = 4294901762, ids: Int = 4195311083
+        //self.type = type
+//        self.idsDev = ids
+//        self.sno = sno
+        
         if type == .devInfo {
             self.dictionaryTmp = devInfoRequest
         } else if type == .paramDev {
@@ -39,39 +35,10 @@ class CreateBinaryPacketToSend {
         }
     }
     
-    func createBinaryString() -> [String] {
-        var stringArr: [String] = []
+    func createBinaryStringFirstCheck(type: TypeOfPacket, sno: Int) -> [String] {
+        let stringArr: [String] = ["0"]
+        var sno = sno
         if type == .devInfo {
-            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-            guard let result = convertIntArrToStringArr(intArr: res) else {
-                print("error in createBinaryString")
-                return ["0"]
-            }
-            return result
-        } else if type == .paramDev {
-            let idDevice = String(describing: idsDev)
-            print("id`Device is - ", idDevice)
-            dictionaryTmp["ids_dev"] = idDevice
-            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-            guard let result = convertIntArrToStringArr(intArr: res) else {
-                print("error in createBinaryString")
-                return ["0"]
-            }
-            return result
-        } else if type == .pktsProgram && imageString64 != nil {
-            
-            let idDevice = String(describing: idsDev)
-            print("id`Device is - ", idDevice)
-            dictionaryTmp["ids_dev"] = idDevice
-            if let image = imageString64 {
-                guard let pktsProgram = dictionaryTmp["pkts_program"] as? [String: Any],
-                      let listRegion = pktsProgram["list_region"] as? [[String: Any]],
-                      let listItem = listRegion.first?["list_item"] as? [[String: Any]],
-                      var zipImg = listItem.first else { return ["0"] }
-                zipImg["zip_bmp"] = image
-            } else {
-                print("Error - with imageString64 ")
-            }
             let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
             guard let result = convertIntArrToStringArr(intArr: res) else {
                 print("error in createBinaryString")
@@ -82,8 +49,90 @@ class CreateBinaryPacketToSend {
     return stringArr
     }
     
-    func createBinaryStringToSetImage() {
+    func createBinaryStringGetParameters(type: TypeOfPacket, deviceId: String, sno: Int) -> [String] {
+        let stringArr: [String] = ["0"]
+        var sno = sno
+        if type == .paramDev {
+            dictionaryTmp["ids_dev"] = deviceId
+            dictionaryTmp["sno"] = sno
+            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+            guard let result = convertIntArrToStringArr(intArr: res) else {
+                print("error in createBinaryString")
+                return ["0"]
+            }
+            return result
+        }
+        return stringArr
+    }
+    
+    func createBinaryStringToSetImage(//self
+                                        type: TypeOfPacket,isBmp: Int,
+                                        //
+                                        deviceId: String, sno: Int,
+                                        //pkts_program
+                                        idPro: Int = 1,
+                                        //list_region
+                                        //info_pos
+                                        heightPos: Int = 64, weightPos: Int = 64, xPos: Int = 0, yPos: Int = 0,
+                                        //list_item
+                                        //info_animate
+                                        modelNormal: Int = 1, speed: Int = 10, timeStay: Int = 3,
+                                        //info_border
+                                        borderValue: Int = 0,
+                                        borderType: String = "fixed",
+                                        //
+                                        isGif: Int,/*IMPORTANT*/ typeItem: String = "graphic", image: UIImage, /*IMPORTANT*/
+                                        //property_pro
+                                        grayClr: Int = 4,
+                                        heightPro: Int = 64,
+                                        playLoop: Int = 1,
+                                        sendGifSrc: Int, /*IMPORTANT*/
+                                        timeSync: Int = 3,
+                                        timeSyncEx: Int = 0,
+                                        typeBackGround: Int = 0,
+                                        typeColor: Int = 3, /*???*/
+                                        typePro: Int = 0, /*???*/
+                                        width: Int = 64
         
+        
+                                        ) -> [String] {
+        let stringArr: [String] = ["0"]
+        var sno = sno
+        if type == .pktsProgram {
+            if isBmp == 1 {
+                //convert image to base64String
+                guard let imageData: Data = image.toData(options: [:], type: .bmp) else { return ["0"] }
+                let imageString64 = imageData.base64EncodedString()
+                //
+                dictionaryTmp["ids_dev"] = deviceId
+                dictionaryTmp["sno"] = sno
+                
+                guard let pktsProgram = dictionaryTmp["pkts_program"] as? [String: Any],
+                      let listRegion = pktsProgram["list_region"] as? [[String: Any]],
+                      let propertyPro = pktsProgram["property_pro"] as? [String: Any],
+                      let listItem = listRegion.first?["list_item"] as? [[String: Any]],
+                      var zipImg = listItem.first else { return ["0"] }
+                zipImg["zip_bmp"] = image
+                
+                //property_pro
+                propertyPro["send_gif_src"]
+                
+                
+                
+                
+                let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+                guard let result = convertIntArrToStringArr(intArr: res) else {
+                    print("error in createBinaryString")
+                    return ["0"]
+                }
+                return result
+                
+            } else if isBmp == 0 {
+                
+            }
+        }
+        
+        return stringArr
     }
     
     //sub-function
