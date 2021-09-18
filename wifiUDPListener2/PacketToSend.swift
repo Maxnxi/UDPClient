@@ -22,9 +22,11 @@ class CreateBinaryPacketToSend {
     init(type: TypeOfPacket, ids: Int = 4195311083, imageBMP: UIImage = UIImage()){
         self.type = type
         self.idsDev = ids
+        //convert image to base64String
         self.imageBMP = imageBMP
-        let imageData: Data = imageBMP.toData(
-            //MARK: -> stopped here
+        guard let imageData: Data = imageBMP.toData(options: [:], type: .bmp) else { return }
+        self.imageString64 = imageData.base64EncodedString()
+        //
         if type == .devInfo {
             self.dictionaryTmp = devInfoRequest
         } else if type == .paramDev {
@@ -45,12 +47,21 @@ class CreateBinaryPacketToSend {
             dictionaryTmp["ids_dev"] = idDevice
             var sno = 4294901762
             let result = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-        } else if type == .pktsProgram {
+        } else if type == .pktsProgram && imageString64 != nil {
             let idDevice = String(describing: idsDev)
             print("id`Device is - ", idDevice)
             dictionaryTmp["ids_dev"] = idDevice
-            let image
-            dictionaryTmp["pkts_program"]["list_region"].first["list_item"].first["zip_bmp"] = image
+            if let image = imageString64 {
+                guard let pktsProgram = dictionaryTmp["pkts_program"] as? [String: Any],
+                      let listRegion = pktsProgram["list_region"] as? [[String: Any]],
+                      let listItem = listRegion.first?["list_item"] as? [[String: Any]],
+                      var zipBmp = listItem.first?["zip_bmp"] else { return ["0"] }
+                zipBmp = image
+                //dictionaryTmp["pkts_program"]["list_region"].first["list_item"].first["zip_bmp"] = image
+            } else {
+                print("Error - with imageString64 ")
+            }
+            
             var sno = 4294901762
             let result = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
         }
