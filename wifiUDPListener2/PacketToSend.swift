@@ -67,8 +67,8 @@ class CreateBinaryPacketToSend {
     
     func createBinaryStringToSetImage(//self
                                         type: TypeOfPacket,isBmp: Int,
-                                        //
-                                        deviceId: String, sno: Int,
+                                        //sno: Int = 4294901762, ids: Int = 4195311083
+                                        deviceId: String = "4195311083", sno: Int = 4294901762,
                                         //pkts_program
                                         idPro: Int = 1,
                                         //list_region
@@ -156,13 +156,13 @@ class CreateBinaryPacketToSend {
                 
                 let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
                 guard let result = convertIntArrToStringArr(intArr: res) else {
-                    print("error in createBinaryString")
+                    print("error in createBinaryStringToSetImage")
                     return ["0"]
                 }
                 return result
                 
             } else if isBmp == 0 {
-                
+                print("Not done yet!")
             }
         }
         

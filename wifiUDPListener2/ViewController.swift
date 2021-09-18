@@ -30,9 +30,23 @@ class ViewController: UIViewController {
     }
     
     @IBAction func sendBtnWasPressed(_ sender: Any) {
-        let messArr = testSendImg
         
-        socketGateway = SocketGateway(messageArr: messArr)
+//        let messArr = testSendImg
+//        socketGateway = SocketGateway(messageArr: messArr)
+//        socketGateway?.startSend()
+        guard let pokemon7PathString = Bundle.main.url(forResource: "pokemon7", withExtension: "bmp"),
+              let pokemonImage7 = UIImage(contentsOfFile: pokemon7PathString.path) else {
+            print("Error getting image as Bmp")
+            return
+        }
+        let request = CreateBinaryPacketToSend(type: .pktsProgram)
+        guard let packets = request.createBinaryStringToSetImage(type: .pktsProgram, isBmp: 1, isGif: 0, image: pokemonImage7, sendGifSrc: 0) as? [String],
+              packets.first != "0" else {
+            print("Error #303")
+            return
+        }
+        
+        socketGateway = SocketGateway(messageArr: packets)
         socketGateway?.startSend()
         
         
