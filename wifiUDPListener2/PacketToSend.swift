@@ -92,7 +92,7 @@ class CreateBinaryPacketToSend {
                                         typeBackGround: Int = 0,
                                         typeColor: Int = 3, /*???*/
                                         typePro: Int = 0, /*???*/
-                                        width: Int = 64
+                                        widthPro: Int = 64
         
         
                                         ) -> [String] {
@@ -100,6 +100,7 @@ class CreateBinaryPacketToSend {
         var sno = sno
         if type == .pktsProgram {
             if isBmp == 1 {
+                let zipFormatString: String = "zip_bmp"
                 //convert image to base64String
                 guard let imageData: Data = image.toData(options: [:], type: .bmp) else { return ["0"] }
                 let imageString64 = imageData.base64EncodedString()
@@ -107,17 +108,50 @@ class CreateBinaryPacketToSend {
                 dictionaryTmp["ids_dev"] = deviceId
                 dictionaryTmp["sno"] = sno
                 
-                guard let pktsProgram = dictionaryTmp["pkts_program"] as? [String: Any],
+                guard var pktsProgram = dictionaryTmp["pkts_program"] as? [String: Any],
                       let listRegion = pktsProgram["list_region"] as? [[String: Any]],
-                      let propertyPro = pktsProgram["property_pro"] as? [String: Any],
-                      let listItem = listRegion.first?["list_item"] as? [[String: Any]],
+                      var propertyPro = pktsProgram["property_pro"] as? [String: Any],
+                      var infoPos = listRegion.first?["info_pos"] as? [String: Any],
+                      var listItem = listRegion.first?["list_item"] as? [[String: Any]],
+                      var listItemFirst = listItem.first as? [String: Any],
+                      var infoAnimate = listItem.first?["info_animate"] as? [String: Any],
+                      var infoBorder = listItem.first?["info_border"] as? [String: Any],
                       var zipImg = listItem.first else { return ["0"] }
-                zipImg["zip_bmp"] = image
+                //zipImg["zip_bmp"] = image
+                //pkts_program
+                pktsProgram["id_pro"] = idPro
+                //list_region
+                //info_pos
+                infoPos["h"] = heightPos
+                infoPos["w"] = weightPos
+                infoPos["x"] = xPos
+                infoPos["y"] = yPos
+                
+                //list_item
+                //info_animate
+                infoAnimate["model_normal"] = modelNormal
+                infoAnimate["speed"] = speed
+                infoAnimate["time_stay"] = timeStay
+                
+                //info_border
+                infoBorder["fixed_value"] = borderValue
+                infoBorder["type"] = borderType
+                //
+                listItemFirst["isGif"] = isGif
+                listItemFirst["type_item"] = typeItem
+                listItemFirst[zipFormatString] = imageString64
                 
                 //property_pro
-                propertyPro["send_gif_src"]
-                
-                
+                propertyPro["gray"] = grayClr
+                propertyPro["height"] = heightPro
+                propertyPro["play_loop"] = playLoop
+                propertyPro["send_gif_src"] = sendGifSrc
+                propertyPro["time_sync"] = timeSync
+                propertyPro["time_sync_ex"] = timeSyncEx
+                propertyPro["type_bg"] = typeBackGround
+                propertyPro["type_color"] = typeColor
+                propertyPro["type_pro"] = typePro
+                propertyPro["width"] = widthPro
                 
                 
                 let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
