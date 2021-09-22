@@ -23,6 +23,7 @@
 		056A5A7626F488470069A12B /* pokemon7.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 056A5A7526F488470069A12B /* pokemon7.bmp */; };
 		056A5A7826F48C350069A12B /* PacketToSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A5A7726F48C350069A12B /* PacketToSend.swift */; };
 		0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576CDEE26F35D0D00A62B7C /* CodeLib.swift */; };
+		05A7CDC726F88F29000FED61 /* tlv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A7CDC626F88F29000FED61 /* tlv.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		056A5A7526F488470069A12B /* pokemon7.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = pokemon7.bmp; sourceTree = "<group>"; };
 		056A5A7726F48C350069A12B /* PacketToSend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketToSend.swift; sourceTree = "<group>"; };
 		0576CDEE26F35D0D00A62B7C /* CodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeLib.swift; sourceTree = "<group>"; };
+		05A7CDC626F88F29000FED61 /* tlv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tlv.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				055EEBDD26EF0FEC003C0515 /* IntReader.swift */,
 				055EEBDF26EF11F6003C0515 /* Extension.swift */,
 				0576CDEE26F35D0D00A62B7C /* CodeLib.swift */,
+				05A7CDC626F88F29000FED61 /* tlv.swift */,
 			);
 			path = tlv;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 				055EEBE026EF11F6003C0515 /* Extension.swift in Sources */,
 				055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */,
 				0503A22426ECA3B3001BE3AD /* Extensions.swift in Sources */,
+				05A7CDC726F88F29000FED61 /* tlv.swift in Sources */,
 				0503A22126EC9F5F001BE3AD /* SocketUDP.swift in Sources */,
 				055EEBDC26EF0FBA003C0515 /* DecodeLib.swift in Sources */,
 				055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */,

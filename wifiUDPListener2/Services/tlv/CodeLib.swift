@@ -259,9 +259,13 @@ final class CodeLib: IntReader {
     private func makeBmpData(_ pkts: inout [[Int]], _ img: inout [UInt8], _ outImg: inout [Int], _ item: [String: Any], _ prop: [String: Any], _ region: [String: Any], _ idPro: Int, _ idRect: Int, _ idItem: Int, _ dataSave: Int, _ sno: inout Int) {
         //var delay_frame: [UInt32] = []
         guard let width = readUInt32LE(arrayOfInts: img, offset: 0x12),    // makeLittle(img, 0x12)
-              let height = readUInt32LE(arrayOfInts: img, offset: 0x16) else { // 0x16
+              var height = readUInt32LE(arrayOfInts: img, offset: 0x16) else { // 0x16
             print("Error in makeBmpData width and height")
             return
+        }
+        if height > 0xffff{
+            height ^= 0xffffffff
+            height += 1
         }
         print("width and height")
         print(width)

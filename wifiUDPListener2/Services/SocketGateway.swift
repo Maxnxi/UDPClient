@@ -16,15 +16,15 @@ class SocketGateway {
     //var isFinished: Bool = false
     //Pause Timer
     //var pauseTimer = Timer()
-    var isPaused: Bool = false
-    var countPauseSeconds = 0 {
-        didSet {
-            print("Pause Timer: ", countPauseSeconds)
-            if countPauseSeconds == 3 && isPaused == true {
-                stopPauseSendAgain()
-            }
-        }
-    }
+//    var isPaused: Bool = false
+//    var countPauseSeconds = 0 {
+//        didSet {
+//            print("Pause Timer: ", countPauseSeconds)
+//            if countPauseSeconds == 3 && isPaused == true {
+//                stopPauseSendAgain()
+//            }
+//        }
+//    }
     //end
     
     //Counter of main loops // количество полных повторных загрузок = 1
@@ -59,7 +59,7 @@ class SocketGateway {
     var messageArr: [String]
     
     //Сокет
-    let socket: SocketUDP?
+    //let socket: SocketUDP?
     
     //статус сокета
     var currentState: StateOfSocket? {
@@ -68,7 +68,7 @@ class SocketGateway {
             //pauseTimer.invalidate()
             
             if currentState == .readyToSend {
-                isPaused = false
+                //isPaused = false
                 if numberOfPacket == totalCountOfPackets {
                     finishState()
                 } else {
@@ -76,7 +76,7 @@ class SocketGateway {
                     send(nmbrPckt: numberOfPacket)
                 }
             } else if currentState == .needToSendPreviousAgain {
-                isPaused = false
+                //isPaused = false
                 print("Send Again Previous")
                 numberOfPacket -= 1
                 errorCounter += 1
@@ -97,7 +97,7 @@ class SocketGateway {
         self.messageArr = messageArr
         self.totalCountOfPackets = messageArr.count
         
-        socket = SocketUDP()
+        //socket = SocketUDP()
 
         print("Inited")
 //        repeat {
@@ -116,18 +116,20 @@ class SocketGateway {
     
     func startSend(){
         currentState = .readyToSend
-        socket?.socketDelegate = self
+//        socket?.socketDelegate = self
     }
     
     func send(nmbrPckt: Int) {
         if errorCounter == errorLimits {
             currentState = .finishWithError
         }
-        socket?.connectSendMessageReceiveAnswer(message: messageArr[nmbrPckt])
+        let socket = SocketUDP(message: messageArr[nmbrPckt])
+        socket.socketDelegate = self
+        //socket?.connectSendMessageReceiveAnswer(message: messageArr[nmbrPckt])
     }
     
     func pause() {
-        isPaused = true
+        //isPaused = true
         print("Pause")
         //startPauseTimer()
     }
@@ -135,7 +137,7 @@ class SocketGateway {
     func stopPauseSendAgain() {
         currentState = .needToSendPreviousAgain
         errorCounter += 1
-        isPaused = false
+        //isPaused = false
         //pauseTimer.invalidate()
     }
     
@@ -146,16 +148,13 @@ class SocketGateway {
     func finish() {
         print("Finished sending Packs")
         //socket?.closeSocket()
-        guard let scket = socket else {
-            print("Error in close func in SocketGateway")
-            return
-        }
-        scket.closeSocket()
+        
+        //scket.closeSocket()
     }
     
     func finishWithError() {
         print("!!! Attention !!! Finish with error")
-        socket?.closeSocket()
+        //socket?.closeSocket()
     }
     
 //только один раз
@@ -170,14 +169,17 @@ class SocketGateway {
 
 extension SocketGateway: SocketUDPDelegate {
     func increaseErrorCounter() {
+        print("Delegate works increaseErrorCounter")
         self.errorCounter += 1
     }
     
     func changeStateofSocket(state: StateOfSocket) {
+        print("Delegate works changeStateofSocket")
         self.currentState = state
     }
     
     func increasePacketNumber() {
+        print("Delegate works increasePacketNumber")
         self.numberOfPacket += 1
     }
     

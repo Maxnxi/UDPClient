@@ -24,12 +24,14 @@ extension String {
 //    }
 
 //: ### Base64 decoding a string
-    func base64Decoded() -> String? {
+    //
+    /*func base64Decoded() -> String? {
         if let data = Data(base64Encoded: self) {
             return String(data: data, encoding: .utf8)
         }
         return nil
     }
+ */
 
     // convert String to array of 1.0
     func convertToArrayofInt() -> [Int]? {
