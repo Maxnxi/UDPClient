@@ -20,20 +20,45 @@ protocol SocketUDPDelegate: AnyObject {
 class SocketUDP {
     
     weak var socketDelegate: SocketUDPDelegate?
-    var connection: NWConnection?
+    var mySConnection: NWConnection = {
+        var hostUDP: NWEndpoint.Host = "192.168.4.1"
+        var portUDP: NWEndpoint.Port = 9090
+        var params = NWParameters.udp
+        params.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.any), port: 58787)
+        params.allowLocalEndpointReuse = true
+        var connection = NWConnection(host: hostUDP, port: portUDP, using: params)
+        
+        return connection
+    }()
+    
+    let customQueue = DispatchQueue(label: "connection")
     var hostUDP: NWEndpoint.Host = "192.168.4.1"
     var portUDP: NWEndpoint.Port = 9090
-    
+    var sendPackId: Int = 0
+    //let params = NWParameters.udp// (dtls: nil, udp: .init())
         
-    init(message: String) {
+    init() {
         //Параметры - чтобы bind исходящий порт, не заработало
-        let params = NWParameters(dtls: nil, udp: .init())
-        params.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.any), port: 58787)
+       
+        
 //        params.allowLocalEndpointReuse = true
 //        params.allowFastOpen = true
 //        self.connection = NWConnection(host: hostUDP, port: portUDP, using: params)
-        connection = NWConnection(host: hostUDP, port: portUDP, using: params)
-        connection?.stateUpdateHandler = { (newState) in
+        
+        print("SocketUDP inited")
+    }
+    
+    deinit {
+        closeSocket()
+        print("socketUDP deinit")
+    }
+          
+    public func connectSendMessageReceiveAnswer(message: String) {
+        // Transmited message:
+        //params.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.any), port: 58787)
+        //params.allowLocalEndpointReuse = true
+        //self.connection = NWConnection(host: hostUDP, port: portUDP, using: params)
+        mySConnection.stateUpdateHandler = { (newState) in
             print("This is stateUpdateHandler:")
             switch (newState) {
             case .ready:
@@ -48,42 +73,11 @@ class SocketUDP {
                 print("State: Preparing\n")
             default:
                 print("ERROR! State not defined!\n")
-                self.connection?.forceCancel()
             }
         }
-        connection?.start(queue: .global())
-        print("SocketUDP inited")
+        mySConnection.start(queue: customQueue)
         
     }
-    
-    deinit {
-        closeSocket()
-        print("socketUDP deinit")
-    }
-          
-//    public func connectSendMessageReceiveAnswer(message: String) {
-//        // Transmited message:
-//        self.connection = NWConnection(host: hostUDP, port: portUDP, using: params)
-//        self.connection.stateUpdateHandler = { (newState) in
-//            print("This is stateUpdateHandler:")
-//            switch (newState) {
-//            case .ready:
-//                print("State: Ready\n")
-//                self.sendUDP(message: message)
-//                self.receiveUDP()
-//            case .setup:
-//                print("State: Setup\n")
-//            case .cancelled:
-//                print("State: Cancelled\n")
-//            case .preparing:
-//                print("State: Preparing\n")
-//            default:
-//                print("ERROR! State not defined!\n")
-//            }
-//        }
-//        self.connection.start(queue: .global())
-//        
-//    }
 
 //  sub functions
     private func sendUDP(message: String) {
@@ -92,10 +86,12 @@ class SocketUDP {
             return
         }
 //  print("Data to send", contentToSendUDP as Any)
-        connection?.send(content: contentToSendUDP, completion: NWConnection.SendCompletion.contentProcessed({ error in
+        mySConnection.send(content: contentToSendUDP, completion: NWConnection.SendCompletion.contentProcessed({ error in
             if error == nil {
                 self.socketDelegate?.increasePacketNumber()
                 print("Send succeded")
+                self.sendPackId += 1
+                print("Send id # ", self.sendPackId)
                 self.socketDelegate?.changeStateofSocket(state: .pause)
             } else {
                 print("Error while sending udp packet", error as Any)
@@ -106,7 +102,7 @@ class SocketUDP {
     }
 
           private func receiveUDP() {
-            self.connection?.receiveMessage { [weak self] (data, context, isComplete, error) in
+            mySConnection.receiveMessage { [weak self] (data, context, isComplete, error) in
                 if (isComplete) {
                     guard let stringHex = data?.hexadecimal else {
                         print("Error in receiveUDP")
@@ -150,10 +146,11 @@ class SocketUDP {
         
     public func closeSocket() {
         //connection.cancel()
-        guard let tmpConnection = connection else {
-            print("Error in closeSocket")
-            return
-        }
+        let tmpConnection = mySConnection
+//        else {
+//            print("Error in closeSocket")
+//            return
+//        }
         tmpConnection.stateUpdateHandler = nil
         tmpConnection.viabilityUpdateHandler = nil
         tmpConnection.betterPathUpdateHandler = nil
@@ -165,7 +162,7 @@ class SocketUDP {
     }
     
     func closeAllConnections() {
-        connection?.forceCancel()
+        mySConnection.forceCancel()
     }
     
 }

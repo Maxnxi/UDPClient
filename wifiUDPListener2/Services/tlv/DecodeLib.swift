@@ -3,7 +3,8 @@
 //  wifiUDPListener2
 //
 //  Created by Maksim on 13.09.2021.
-//
+
+//2 - частая ошибка, 9 - когда не поддерживал формат
 
 import Foundation
 

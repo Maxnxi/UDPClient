@@ -14,7 +14,11 @@
 		0503A21626EC9E93001BE3AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0503A21526EC9E93001BE3AD /* Assets.xcassets */; };
 		0503A21926EC9E93001BE3AD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0503A21726EC9E93001BE3AD /* LaunchScreen.storyboard */; };
 		0503A22126EC9F5F001BE3AD /* SocketUDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0503A22026EC9F5F001BE3AD /* SocketUDP.swift */; };
-		0503A22426ECA3B3001BE3AD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0503A22326ECA3B3001BE3AD /* Extensions.swift */; };
+		0503A22426ECA3B3001BE3AD /* Extensions_String_Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0503A22326ECA3B3001BE3AD /* Extensions_String_Data.swift */; };
+		0519982B26FCCDA100703657 /* tlv8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519982A26FCCDA100703657 /* tlv8.swift */; };
+		0519982D26FCD30000703657 /* tlv9.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519982C26FCD30000703657 /* tlv9.swift */; };
+		0519982F26FCDE7E00703657 /* tlv10.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519982E26FCDE7E00703657 /* tlv10.swift */; };
+		0519983126FCE21400703657 /* tlv11.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519983026FCE21400703657 /* tlv11.swift */; };
 		055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBD826EDCFBC003C0515 /* SocketGateway.swift */; };
 		055EEBDC26EF0FBA003C0515 /* DecodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDB26EF0FBA003C0515 /* DecodeLib.swift */; };
 		055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDD26EF0FEC003C0515 /* IntReader.swift */; };
@@ -23,7 +27,19 @@
 		056A5A7626F488470069A12B /* pokemon7.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 056A5A7526F488470069A12B /* pokemon7.bmp */; };
 		056A5A7826F48C350069A12B /* PacketToSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A5A7726F48C350069A12B /* PacketToSend.swift */; };
 		0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576CDEE26F35D0D00A62B7C /* CodeLib.swift */; };
-		05A7CDC726F88F29000FED61 /* tlv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A7CDC626F88F29000FED61 /* tlv.swift */; };
+		0579E14526FB490E00F08DF7 /* tests.json in Resources */ = {isa = PBXBuildFile; fileRef = 0579E14026FB490E00F08DF7 /* tests.json */; };
+		0579E14626FB490E00F08DF7 /* TestStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14126FB490E00F08DF7 /* TestStructure.swift */; };
+		0579E14726FB490E00F08DF7 /* tlv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14226FB490E00F08DF7 /* tlv.swift */; };
+		0579E14826FB490E00F08DF7 /* CGifManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14326FB490E00F08DF7 /* CGifManager.swift */; };
+		0579E14926FB490E00F08DF7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14426FB490E00F08DF7 /* Extensions.swift */; };
+		0579E14B26FB9F4A00F08DF7 /* tlv1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14A26FB9F4A00F08DF7 /* tlv1.swift */; };
+		0579E14D26FBA22200F08DF7 /* tlv2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14C26FBA22200F08DF7 /* tlv2.swift */; };
+		0579E14F26FBB1C200F08DF7 /* tlv3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E14E26FBB1C200F08DF7 /* tlv3.swift */; };
+		0579E15126FBB6EF00F08DF7 /* tlv4.42.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E15026FBB6EF00F08DF7 /* tlv4.42.swift */; };
+		0579E15326FBBA3B00F08DF7 /* tlv5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E15226FBBA3B00F08DF7 /* tlv5.swift */; };
+		0579E15526FBC0DA00F08DF7 /* tlv6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E15426FBC0DA00F08DF7 /* tlv6.swift */; };
+		0579E15726FBC3FE00F08DF7 /* tlv7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0579E15626FBC3FE00F08DF7 /* tlv7.swift */; };
+		05A7CDC726F88F29000FED61 /* oldtlv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A7CDC626F88F29000FED61 /* oldtlv.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +52,11 @@
 		0503A21826EC9E93001BE3AD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0503A21A26EC9E93001BE3AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0503A22026EC9F5F001BE3AD /* SocketUDP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketUDP.swift; sourceTree = "<group>"; };
-		0503A22326ECA3B3001BE3AD /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0503A22326ECA3B3001BE3AD /* Extensions_String_Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions_String_Data.swift; sourceTree = "<group>"; };
+		0519982A26FCCDA100703657 /* tlv8.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv8.swift; sourceTree = "<group>"; };
+		0519982C26FCD30000703657 /* tlv9.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv9.swift; sourceTree = "<group>"; };
+		0519982E26FCDE7E00703657 /* tlv10.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv10.swift; sourceTree = "<group>"; };
+		0519983026FCE21400703657 /* tlv11.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv11.swift; sourceTree = "<group>"; };
 		055EEBD826EDCFBC003C0515 /* SocketGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketGateway.swift; sourceTree = "<group>"; };
 		055EEBDB26EF0FBA003C0515 /* DecodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeLib.swift; sourceTree = "<group>"; };
 		055EEBDD26EF0FEC003C0515 /* IntReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntReader.swift; sourceTree = "<group>"; };
@@ -45,7 +65,19 @@
 		056A5A7526F488470069A12B /* pokemon7.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = pokemon7.bmp; sourceTree = "<group>"; };
 		056A5A7726F48C350069A12B /* PacketToSend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketToSend.swift; sourceTree = "<group>"; };
 		0576CDEE26F35D0D00A62B7C /* CodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeLib.swift; sourceTree = "<group>"; };
-		05A7CDC626F88F29000FED61 /* tlv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tlv.swift; sourceTree = "<group>"; };
+		0579E14026FB490E00F08DF7 /* tests.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tests.json; sourceTree = "<group>"; };
+		0579E14126FB490E00F08DF7 /* TestStructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestStructure.swift; sourceTree = "<group>"; };
+		0579E14226FB490E00F08DF7 /* tlv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv.swift; sourceTree = "<group>"; };
+		0579E14326FB490E00F08DF7 /* CGifManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGifManager.swift; sourceTree = "<group>"; };
+		0579E14426FB490E00F08DF7 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0579E14A26FB9F4A00F08DF7 /* tlv1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv1.swift; sourceTree = "<group>"; };
+		0579E14C26FBA22200F08DF7 /* tlv2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv2.swift; sourceTree = "<group>"; };
+		0579E14E26FBB1C200F08DF7 /* tlv3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv3.swift; sourceTree = "<group>"; };
+		0579E15026FBB6EF00F08DF7 /* tlv4.42.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv4.42.swift; sourceTree = "<group>"; };
+		0579E15226FBBA3B00F08DF7 /* tlv5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv5.swift; sourceTree = "<group>"; };
+		0579E15426FBC0DA00F08DF7 /* tlv6.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv6.swift; sourceTree = "<group>"; };
+		0579E15626FBC3FE00F08DF7 /* tlv7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv7.swift; sourceTree = "<group>"; };
+		05A7CDC626F88F29000FED61 /* oldtlv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oldtlv.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,11 +127,12 @@
 		0503A22226EC9F7F001BE3AD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0579E13F26FB48FA00F08DF7 /* oldTlv */,
 				055EEBDA26EF0FA1003C0515 /* tlv */,
 				055EEBD826EDCFBC003C0515 /* SocketGateway.swift */,
 				0503A22026EC9F5F001BE3AD /* SocketUDP.swift */,
 				055EEBE126EF76B6003C0515 /* SocketUDP2Broadcast.swift */,
-				0503A22326ECA3B3001BE3AD /* Extensions.swift */,
+				0503A22326ECA3B3001BE3AD /* Extensions_String_Data.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -111,9 +144,32 @@
 				055EEBDD26EF0FEC003C0515 /* IntReader.swift */,
 				055EEBDF26EF11F6003C0515 /* Extension.swift */,
 				0576CDEE26F35D0D00A62B7C /* CodeLib.swift */,
-				05A7CDC626F88F29000FED61 /* tlv.swift */,
+				05A7CDC626F88F29000FED61 /* oldtlv.swift */,
 			);
 			path = tlv;
+			sourceTree = "<group>";
+		};
+		0579E13F26FB48FA00F08DF7 /* oldTlv */ = {
+			isa = PBXGroup;
+			children = (
+				0579E14326FB490E00F08DF7 /* CGifManager.swift */,
+				0579E14426FB490E00F08DF7 /* Extensions.swift */,
+				0579E14026FB490E00F08DF7 /* tests.json */,
+				0579E14126FB490E00F08DF7 /* TestStructure.swift */,
+				0519983026FCE21400703657 /* tlv11.swift */,
+				0519982E26FCDE7E00703657 /* tlv10.swift */,
+				0519982C26FCD30000703657 /* tlv9.swift */,
+				0519982A26FCCDA100703657 /* tlv8.swift */,
+				0579E15626FBC3FE00F08DF7 /* tlv7.swift */,
+				0579E15426FBC0DA00F08DF7 /* tlv6.swift */,
+				0579E15226FBBA3B00F08DF7 /* tlv5.swift */,
+				0579E15026FBB6EF00F08DF7 /* tlv4.42.swift */,
+				0579E14E26FBB1C200F08DF7 /* tlv3.swift */,
+				0579E14C26FBA22200F08DF7 /* tlv2.swift */,
+				0579E14A26FB9F4A00F08DF7 /* tlv1.swift */,
+				0579E14226FB490E00F08DF7 /* tlv.swift */,
+			);
+			path = oldTlv;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +232,7 @@
 				0503A21926EC9E93001BE3AD /* LaunchScreen.storyboard in Resources */,
 				056A5A7626F488470069A12B /* pokemon7.bmp in Resources */,
 				0503A21626EC9E93001BE3AD /* Assets.xcassets in Resources */,
+				0579E14526FB490E00F08DF7 /* tests.json in Resources */,
 				0503A21426EC9E90001BE3AD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,18 +244,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0579E14826FB490E00F08DF7 /* CGifManager.swift in Sources */,
+				0579E15526FBC0DA00F08DF7 /* tlv6.swift in Sources */,
+				0519983126FCE21400703657 /* tlv11.swift in Sources */,
+				0519982D26FCD30000703657 /* tlv9.swift in Sources */,
 				055EEBE026EF11F6003C0515 /* Extension.swift in Sources */,
+				0519982B26FCCDA100703657 /* tlv8.swift in Sources */,
+				0579E15326FBBA3B00F08DF7 /* tlv5.swift in Sources */,
 				055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */,
-				0503A22426ECA3B3001BE3AD /* Extensions.swift in Sources */,
-				05A7CDC726F88F29000FED61 /* tlv.swift in Sources */,
+				0503A22426ECA3B3001BE3AD /* Extensions_String_Data.swift in Sources */,
+				05A7CDC726F88F29000FED61 /* oldtlv.swift in Sources */,
 				0503A22126EC9F5F001BE3AD /* SocketUDP.swift in Sources */,
+				0579E15126FBB6EF00F08DF7 /* tlv4.42.swift in Sources */,
+				0579E14726FB490E00F08DF7 /* tlv.swift in Sources */,
 				055EEBDC26EF0FBA003C0515 /* DecodeLib.swift in Sources */,
+				0579E14B26FB9F4A00F08DF7 /* tlv1.swift in Sources */,
+				0579E14D26FBA22200F08DF7 /* tlv2.swift in Sources */,
 				055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */,
 				0503A21126EC9E90001BE3AD /* ViewController.swift in Sources */,
 				055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */,
+				0579E14626FB490E00F08DF7 /* TestStructure.swift in Sources */,
 				0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */,
+				0579E15726FBC3FE00F08DF7 /* tlv7.swift in Sources */,
 				0503A20D26EC9E90001BE3AD /* AppDelegate.swift in Sources */,
+				0519982F26FCDE7E00703657 /* tlv10.swift in Sources */,
+				0579E14926FB490E00F08DF7 /* Extensions.swift in Sources */,
 				056A5A7826F48C350069A12B /* PacketToSend.swift in Sources */,
+				0579E14F26FBB1C200F08DF7 /* tlv3.swift in Sources */,
 				0503A20F26EC9E90001BE3AD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

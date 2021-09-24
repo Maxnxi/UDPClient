@@ -26,21 +26,42 @@ class ViewController: UIViewController {
     }
     
     @IBAction func createBinaryAndSendBttnWasPrssd(_ sender: Any) {
-        guard let pokemon7PathString = Bundle.main.url(forResource: "pokemon7", withExtension: "bmp"),
-              let pokemonImage7 = UIImage(contentsOfFile: pokemon7PathString.path) else {
-            print("Error getting image as Bmp")
-            return
-        }
-        let request = CreateBinaryPacketToSend(type: .pktsProgram)
-        print("Request is - ", request)
-        guard let packets = request.createBinaryStringToSetImage(type: .pktsProgram, isBmp: 1, isGif: 0, image: pokemonImage7, sendGifSrc: 0) as? [String],
-              packets.first != "0" else {
-            print("Error #303")
-            return
-        }
+        // version #1
+//        guard let pokemon7PathString = Bundle.main.url(forResource: "pokemon7", withExtension: "bmp"),
+//              let pokemonImage7 = UIImage(contentsOfFile: pokemon7PathString.path) else {
+//            print("Error getting image as Bmp")
+//            return
+//        }
+//        let request = CreateBinaryPacketToSend(type: .pktsProgram)
+//        print("Request is - ", request)
+//        guard let packets = request.createBinaryStringToSetImage(type: .pktsProgram, isBmp: 1, isGif: 0, image: pokemonImage7, sendGifSrc: 0) as? [String],
+//              packets.first != "0" else {
+//            print("Error #303")
+//            return
+//        }
         
-        socketGateway = SocketGateway(messageArr: packets)
-        socketGateway?.startSend()
+        // version #2
+        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return }
+                do {
+                    let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                    let tests = try JSONDecoder().decode(Tests.self, from: data)
+                    var sno = 4294901762
+                    let gif_request = try tests[6].json.asDictionary()
+                    guard let binaryStrings = tlv.shared.parseJson(gif_request, &sno) else {
+                        print("Assul err")
+                        return }
+                    
+                    
+                    // send binaryString to LED
+                    socketGateway = SocketGateway(messageArr: binaryStrings)
+                    socketGateway?.startSend()
+                    
+                } catch {
+                   print("Error while converting into data")
+                }
+        
+//        socketGateway = SocketGateway(messageArr: binaryStrings)
+//        socketGateway?.startSend()
     }
     
     @IBAction func sendBtnWasPressed(_ sender: Any) {
