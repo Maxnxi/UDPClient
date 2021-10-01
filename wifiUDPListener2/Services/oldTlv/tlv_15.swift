@@ -64,14 +64,14 @@
 //                pkt.writeInt(bin_code!, 1, nil)
 //                pkt.writeInt(0, 1, nil)
 //                var flag:Bool? = nil
-//                
+//
 //                pkt = makePacket(pkt, sno, 0xC1, 3, &flag)
 //            }
 //        }
 //        return [pkt]
 //    }
-//    
-//    
+//
+//
 //    private func getColorMatrix(_ img:[UInt8], _ offset:Int, _ outImg: inout [Int], _ width:Int, _ height:Int,_ rowStripe:Int, _ color_plane:Int, _ bit:Int){
 //        for cur_y in (0..<height).reversed(){
 //            var set_bit = 0
@@ -114,21 +114,21 @@
 //            pkt.append(ani["speed"]! as! Int - 1)
 //            pkt.append(((item["isGif"]! as! Int) != 0) ? 0 : ani["time_stay"]! as! Int)
 //        }
-//        
+//
 //        // Writing data item control block
 //        pkt.append(0x11)
 //        pkt.append(0x10)
 //        var timeDelay = 1
 //        var timeType = 0
-//        
-//        
+//
+//
 //        if let play_fixed_time = prop["play_fixed_time"] as? Int{
 //            timeType = 1
 //            timeDelay = play_fixed_time
 //        }else if let play_loop = prop["play_loop"]  as? Int{
 //            timeDelay = play_loop
 //        }
-//        
+//
 //        pkt.append(timeType)
 //        pkt.writeInt(timeDelay, 2, nil)
 //        pkt.append(7)
@@ -149,7 +149,7 @@
 //            pkt.append(ani["speed"]! as! Int - 1)
 //            pkt.append((item["isGif"] as! Int != 0) ? 0 : ani["time_stay"]! as! Int)
 //        }
-//        
+//
 //        // Writing data item control block
 //        pkt.append(0x11)
 //        pkt.append(0xC)
@@ -211,7 +211,7 @@
 //    }
 //    private func makeDataPropertyProgram(_ propertyPro:[String:Any?],_ infoPos:[String:Any], _ idPro:Int,_ width:Int, _ height:Int, _ dataSave:Int)-> [Int] {
 //        var result = [Int]()
-//        
+//
 //        if (idPro < 255) {
 //            result.writeInt(0x208, 3, nil)
 //            result.append(idPro);
@@ -222,8 +222,8 @@
 //        result.append(propertyPro["type_bg"]! as! Int);
 //        result.append(0);
 //        result.writeInt(((propertyPro["play_loop"] as? Int) != nil) ? propertyPro["play_loop"]! as! Int : 1, 2, nil)
-//        
-//        
+//
+//
 //        result.writeInt(((propertyPro["time_sync"] as? Int) != nil) ? propertyPro["time_sync"]! as! Int :3, 2, nil)
 //        result.writeInt(0x10D, 2, nil)
 //        result.append(0); // TODO: region index
@@ -255,14 +255,13 @@
 //        print("Count page: \(countPage)")
 //        let typeColor = (prop["type_color"] as? Int) != nil ? prop["type_color"]! as! Int : 3
 //        let gray = (prop["gray"] as? Int) != nil ? prop["gray"]! as! Int : 4
-//        
+//
 //        var pkt = makeDataPropertyProgram(prop , region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
 //        var writeLengthFlag :Bool? = nil
 //        pkt = makePacket(pkt, sno, 0x41, 2, &writeLengthFlag)
-//        sno += 1
 //        pkts.append(pkt);
-//       
-//        
+//        sno += 1
+//
 //        pkt = [Int]()
 //        writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
 //        if let df = item["delay_frame"] as? [Int] {
@@ -272,12 +271,11 @@
 //                }
 //            }
 //        }
-//       
-//        for i in 0..<30 {
-//            delay_frame.writeInt(i*100, 2, nil)
+//
+//        for i in 0..<39{
+//            delay_frame.writeInt(i, 2, nil)
 //        }
-//        
-//        if (delay_frame.count >= 0) {
+//        if (delay_frame.count > 0) {
 //            outImg += delay_frame
 //            writeGifImageFrameHeader(&pkt, item, prop, UInt32(width), UInt32(height), countPage, typeColor, gray)
 //        } else {
@@ -287,7 +285,7 @@
 //        pkt = makePacket(pkt, sno, 0x41, 2, &flag)
 ////        sno += 1
 //        pkts.append(pkt);
-//        
+//
 //        var gamma = [Int]()
 //        var gammaCoeff:Double = 1.6
 //        if let g = item["gamma"] as? Double{
@@ -299,10 +297,11 @@
 //            gamma.append((Int(gammaVal)));
 //        }
 //        print("Gray: \(gray)")
-//       
+//
+//
 //        for pageNo in 0..<countPage {
 //            let offset = pageNo * imgSize
-//            
+//
 //            for idx in 0..<img.count-offset{
 //                img[offset + idx] = UInt8(gamma[Int(img[offset + idx])])
 //            }
@@ -322,7 +321,7 @@
 //        let rowStripe = (tmp - Int(tmp)) > 0 ? Int(tmp + 1) * 4 : tmp * 4
 //        let imgSize = rowStripe * (prop["height"]! as! Int) + 0x36
 //        let countPage = Int(img.count / 0x400);
-//        
+//
 //        var typeColor = 3
 //        if (prop["type_color"] as? Int) != nil {
 //            typeColor = prop["type_color"]! as! Int
@@ -331,9 +330,9 @@
 //        if (prop["gray"] as? Int) != nil {
 //            gray = prop["gray"]! as! Int
 //        }
-//        
-//        
-//        
+//
+//
+//
 //        var pkt = makeDataPropertyProgram(prop, region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
 //        var flag:Bool? = nil
 //        pkt = makePacket(pkt, sno, 0xC1, 2, &flag)
@@ -348,7 +347,7 @@
 //            pkt.append(ani["speed"]! as! Int - 1)
 //            pkt.append(((item["isGif"] as? Int) != nil) ? 0 : ani["time_stay"]! as! Int)
 //        }
-//        
+//
 //        pkt.writeInt(0x411,2, nil)
 //        pkt.writeInt(0x100,3, nil)
 //        pkt.append(10)
@@ -361,23 +360,46 @@
 //        }
 ////        outImg += img   //        img.map(val => outImg.push(val))
 //    }
-//    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
-//
+//    public func parseUIImage(uiimage: UIImage?)->[String]?{
+//        guard let image = uiimage else {return nil}
+//        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return nil}
+//        do {
+//            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+//            let tests = try JSONDecoder().decode(Tests.self, from: data)
+//            var sno = 4294901762
+//            let obj = try tests[5].json.asDictionary()
+//            guard let pkts = getListOfPackets(obj, &sno, image: image) else {return nil}
+//            var str = ""
+//            var output = [String]()
+//            for pkt in pkts{
+//                for byte in pkt {
+//                    str += String(format:"%02X", byte)
+//                }
+//                output.append(str)
+//                str = ""
+//            }
+//            return output
+//        }catch {
+//           print("Error while converting into data")
+//        }
+//        return nil
+//    }
+//    private func getListOfPackets(_ obj:[String:Any], _ sno: inout Int, image: UIImage)->[[Int]]?{
 //        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
 //        guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
-//        
+//
 //        var pkts = [[Int]]()
 //        var pkt = [Int]()
 //        let idPro = (pgm["id_pro"]! as! Int ) - 1
 //        var dataSave = 0
 //        var outImg = [Int]()
-//        
+//
 //        if let ds = pgm["data_save"] as? Int{
 //            dataSave = ds
 //        }
 //        let region = (pgm["list_region"]! as! [[String:Any]]).first
 //        var idRect = 0
-//        
+//
 //        if let id_rect = region?["id_rect"] as? Int {
 //            idRect = id_rect - 1
 //        }
@@ -387,37 +409,12 @@
 //        if let id_item = region?["id_item"] as? Int {
 //            idItem = id_item - 1
 //        }
-//    
-//        guard let zipBmp = item?[(prop["send_gif_src"] as! Int != 0) ? "zip_gif" : "zip_bmp"] as? String else {
-//            print("Error there is no base64String?")
-//            return nil
-//        }
 //
-//        guard let data = Data(base64Encoded: zipBmp) else { return nil }
-//        
-//        
-//        var img = [UInt8]()
-//        var count = 0
-//        CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
-//            for frame in allFrames {
-//                
-//                guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
-//                
-//                var frame_bytes = [UInt8](bmp_data)
-//                frame_bytes.removeFirst(54) // remove header only raw data
-//                if (count>=42 && count<72){
-//                    img += frame_bytes
-//                }
-//                
-//                
-//                
-//                count += 1
-//            }
-//        }
-//        
-//        
-//            print("FRAMES ADDED: \(count)")
-//        
+//        guard let bmp_data = image.toData(options: [:], type: .bmp) else {return nil}
+//
+//        var img = [UInt8](bmp_data)
+//        img.removeFirst(0x36)    // remove header , because width and size should be 64x64
+//
 //            // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
 //        if prop["send_gif_src"] as! Int != nil {
 //            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
@@ -428,11 +425,11 @@
 //            //            sno += 2
 //        }
 //
-//        
+//
 //        let totalImgDataSize = outImg.count
 //        let maxBlockSize = 0x400
 //        let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
-//        
+//
 //        for currentBlock in 0..<totalBlocks {
 //            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
 //            let block = Array(data_slice)
@@ -445,7 +442,7 @@
 //            pkt.writeInt(maxBlockSize,2,nil)
 //            pkt.writeInt(0x1300,2, nil)
 //            writeLenLen(&pkt, block.count)
-//            
+//
 //            pkt += block
 //            var flag:Bool? = nil
 //            pkt = makePacket(pkt, sno, 0x41, 2, &flag)
@@ -453,11 +450,103 @@
 //            pkts.append(pkt)
 //        }
 //        return pkts
-//        
+//
+//    }
+//    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
+//
+//        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
+//        guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
+//
+//        var pkts = [[Int]]()
+//        var pkt = [Int]()
+//        let idPro = (pgm["id_pro"]! as! Int ) - 1
+//        var dataSave = 0
+//        var outImg = [Int]()
+//
+//        if let ds = pgm["data_save"] as? Int{
+//            dataSave = ds
+//        }
+//        let region = (pgm["list_region"]! as! [[String:Any]]).first
+//        var idRect = 0
+//
+//        if let id_rect = region?["id_rect"] as? Int {
+//            idRect = id_rect - 1
+//        }
+//
+//        let item = (region?["list_item"]! as! [[String:Any]]).first
+//        var idItem = 0
+//        if let id_item = region?["id_item"] as? Int {
+//            idItem = id_item - 1
+//        }
+//
+//        guard let zipBmp = item?[(prop["send_gif_src"] as! Int != 0) ? "zip_gif" : "zip_bmp"] as? String else {
+//            print("Error there is no base64String?")
+//            return nil
+//        }
+//
+//        guard let data = Data(base64Encoded: zipBmp) else { return nil }
+//
+//
+//        var img = [UInt8]()
+//
+//        // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+//        if prop["send_gif_src"] as! Int != nil {
+//            var count = 0
+//            CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
+//                for frame in allFrames {
+//
+//                    guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
+//
+//                    var frame_bytes = [UInt8](bmp_data)
+//                    frame_bytes.removeFirst(54) // remove header only raw data
+//                    if (count>=72){
+//                        img += frame_bytes
+//                    }
+//                    count += 1
+//                }
+//            }
+//
+//            print("FRAMES ADDED: \(count)")
+//
+//            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+//            //                    sno += 2
+//        }
+//        else{
+//            img = [UInt8](data)
+//            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+//            //            sno += 2
+//        }
+//
+//
+//        let totalImgDataSize = outImg.count
+//        let maxBlockSize = 0x400
+//        let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
+//
+//        for currentBlock in 0..<totalBlocks {
+//            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
+//            let block = Array(data_slice)
+//            outImg.removeFirst(min(outImg.count,maxBlockSize))
+//            var pkt = [Int]()
+//            writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
+//            pkt.writeInt(0x712,2,nil)
+//            pkt.writeInt(totalBlocks,2,nil)
+//            pkt.writeInt(currentBlock,2, nil)
+//            pkt.writeInt(maxBlockSize,2,nil)
+//            pkt.writeInt(0x1300,2, nil)
+//            writeLenLen(&pkt, block.count)
+//
+//            pkt += block
+//            var flag:Bool? = nil
+//            pkt = makePacket(pkt, sno, 0x41, 2, &flag)
+//            //                    sno += 1
+//            pkts.append(pkt)
+//        }
+//        return pkts
+//
 //        //          TO DO:
 //        //        require('fs').writeFileSync(`./img.${prop.send_gif_src ? "gif" : "bmp"}`, img)
 //    }
-//    
+//
 //    public func parseJson(_ obj:[String:Any], _ sno: inout Int) -> [String]?{
 //        var p: [[Int]]? = nil
 //        if obj["pkts_program"] != nil {
@@ -488,9 +577,9 @@
 //        print(string)
 //        // let parts = string.match(/^([^,]*),([^,]*),([^,]*),(.*)$/)
 ////        let parts = matches(for: "/^([^,]*),([^,]*),([^,]*),(.*)$/", in: string)
-//        
+//
 //        // manual matching for regex
-//        
+//
 //        var parts = [String]()
 //        var count = 0
 //        var current = ""
@@ -612,7 +701,7 @@
 //                ]
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readGprs(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]?{
@@ -631,7 +720,7 @@
 //        if string != "" {
 //            parts.append(string)
 //        }
-//        
+//
 //        result = [
 //            "ack": [
 //                "param_gprs": [
@@ -641,7 +730,7 @@
 //                ]
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readSvr(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]? {
@@ -670,7 +759,7 @@
 //                ]
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readPower(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]? {
@@ -691,7 +780,7 @@
 //                ]
 //            ]
 //        }
-//        
+//
 //        return result
 //    }
 //    private func readConfigRes(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]?{
@@ -712,7 +801,7 @@
 //                "baudrate": readUInt32LE(payload, 0) // payload.readUInt32LE(0)
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readWiFi(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]?{
@@ -742,7 +831,7 @@
 //                ]
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readParamTiming(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]?{
@@ -754,7 +843,7 @@
 //                ]
 //            ]
 //        ]
-//        
+//
 //        return result;
 //    }
 //    private func readSync(_ payload:[UInt8], _ sno: Int)-> [AnyHashable:Any]?{
@@ -763,7 +852,7 @@
 //                "sync": payload[0]
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readDelayStart(_ payload:[UInt8], _ sno: Int)-> [AnyHashable:Any]?{
@@ -772,7 +861,7 @@
 //                "delay_start": readUInt32LE(payload, 0) // payload.readUInt32LE(0)
 //            ]
 //        ]
-//        
+//
 //        return result
 //    }
 //    private func readParamInspect(_ payload:[UInt8], _ sno: Int)-> [AnyHashable:Any]? {
@@ -795,12 +884,12 @@
 //                ]
 //            ]
 //        }
-//        
+//
 //        return result
 //    }
 //    public func parseBin(_ pkt:[UInt8], _ pktLen: inout Int?)->[AnyHashable:Any]? {
 //        var result:[AnyHashable:Any]? = [:]
-//        
+//
 //        if pktLen == nil {
 //            pktLen = pkt.count
 //        }
@@ -810,7 +899,7 @@
 //        if (pkt[0] != 170 || pkt[1] != 85) {
 //            return nil
 //        }
-//    
+//
 //        let snoHigh = readUInt16LE(pkt, 6)
 //        let snoLow = readUInt16LE(pkt, 2)
 //        let sno = UInt64(snoHigh) + UInt64(snoLow)*0x10000 // let sno = Number(BigInt(snoHigh) + BigInt(snoLow) * 0x10000n);
@@ -820,7 +909,7 @@
 //            print("PKT_LEN != pktLEN")
 //            return nil
 //        }
-//        
+//
 //        if ([0x82, 0x84].contains(pkt[9])) {
 //            if (pkt[10] == 0) {
 //                return [
@@ -843,23 +932,23 @@
 //                    "sno": sno
 //                ]
 //            }
-//          
+//
 //            let payload_len = readUInt8(pkt, 0xB) // pkt.readUInt8(0xB)
 //            if (payload_len + 0xC + (((pkt[8] >> 7) != 0) ? 2 : 0) != pktLen!) {
 //                print("payload_len + 0XC != ... ")
 //                return nil
 //            }
-//            
+//
 //            let cmd = pkt[10]
 //            // console.log(`sno=${sno}`);
 //            // console.log(`type=${pkt[9].toString(16)}`);
 //            // console.log(`cmd=${cmd.toString(16)}`);
-//            
+//
 //            let payload_slice = pkt[0xC...]
 //            let payload = Array(payload_slice)
-//            
+//
 //            print("The payload: \(payload)")
-//            
+//
 //            switch(cmd) {
 //            case 1:
 //                result = readNet(payload, Int(sno))
@@ -919,7 +1008,7 @@
 //            print("The 9th index of packet neither 130,131 or 132")
 //            return nil
 //        }
-//        
+//
 //        return result
 //    }
 //    private func readUInt32LE(_ img:[UInt8], _ offset: Int) -> Int{
@@ -941,20 +1030,20 @@
 //    private func readUInt8(_ img:[UInt8], _ offset: Int) -> UInt8 {
 //        return img[offset]
 //    }
-//    
+//
 ////    private func pixelValuesFromImage(cgImage: CGImage?) -> ([UInt8]?, width: Int, height: Int)
 ////    {
 ////        var width = 0
 ////        var height = 0
 ////        var pixelValues: [UInt8]?
-////        
+////
 ////        guard let imageRef = cgImage else {return (nil,0,0)}
 ////        width = imageRef.width
 ////        height = imageRef.height
 ////        let bitsPerComponent = imageRef.bitsPerComponent
 ////        let bytesPerRow = imageRef.bytesPerRow
 ////        let totalBytes = height * bytesPerRow
-////        
+////
 ////        let colorSpace = CGColorSpaceCreateDeviceGray()
 ////        //        let colorSpace = CGColorSpaceCreateDeviceRGB()
 ////        var buffer = [UInt8]()
@@ -962,13 +1051,13 @@
 ////            buffer.append(0)
 ////        }
 ////        let mutablePointer = UnsafeMutablePointer<UInt8>(mutating: buffer)
-////        
+////
 ////        let contextRef = CGContext(data: mutablePointer, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: 0)
 ////        CGContextDrawImage(contextRef, CGRectMake(0.0, 0.0, CGFloat(width), CGFloat(height)), imageRef)
-////        
+////
 ////        let bufferPointer = UnsafeBufferPointer<UInt8>(start: mutablePointer, count: totalBytes)
 ////        pixelValues = Array<UInt8>(arrayLiteral: bufferPointer)
-////        
+////
 ////
 ////        return (pixelValues, width, height)
 ////    }

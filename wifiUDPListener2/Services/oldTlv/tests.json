@@ -149,7 +149,7 @@
                 "list_item": [
                   {
                     "info_animate": {
-                      "model_normal": 1,
+                      "model_normal": 2,
                       "speed": 10,
                       "time_stay": 3
                     },

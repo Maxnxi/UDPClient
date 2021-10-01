@@ -259,9 +259,8 @@
 //        var pkt = makeDataPropertyProgram(prop , region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
 //        var writeLengthFlag :Bool? = nil
 //        pkt = makePacket(pkt, sno, 0x41, 2, &writeLengthFlag)
-//        sno += 1
 //        pkts.append(pkt);
-//       
+//        sno += 1
 //        
 //        pkt = [Int]()
 //        writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
@@ -273,11 +272,10 @@
 //            }
 //        }
 //       
-//        for i in 0..<30 {
+//        for i in 0..<39{
 //            delay_frame.writeInt(i*100, 2, nil)
 //        }
-//        
-//        if (delay_frame.count >= 0) {
+//        if (delay_frame.count > 0) {
 //            outImg += delay_frame
 //            writeGifImageFrameHeader(&pkt, item, prop, UInt32(width), UInt32(height), countPage, typeColor, gray)
 //        } else {
@@ -300,6 +298,7 @@
 //        }
 //        print("Gray: \(gray)")
 //       
+//        
 //        for pageNo in 0..<countPage {
 //            let offset = pageNo * imgSize
 //            
@@ -361,6 +360,98 @@
 //        }
 ////        outImg += img   //        img.map(val => outImg.push(val))
 //    }
+//    public func parseUIImage(uiimage: UIImage?)->[String]?{
+//        guard let image = uiimage else {return nil}
+//        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return nil}
+//        do {
+//            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+//            let tests = try JSONDecoder().decode(Tests.self, from: data)
+//            var sno = 4294901762
+//            let obj = try tests[5].json.asDictionary()
+//            guard let pkts = getListOfPackets(obj, &sno, image: image) else {return nil}
+//            var str = ""
+//            var output = [String]()
+//            for pkt in pkts{
+//                for byte in pkt {
+//                    str += String(format:"%02X", byte)
+//                }
+//                output.append(str)
+//                str = ""
+//            }
+//            return output
+//        }catch {
+//           print("Error while converting into data")
+//        }
+//        return nil
+//    }
+//    private func getListOfPackets(_ obj:[String:Any], _ sno: inout Int, image: UIImage)->[[Int]]?{
+//        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
+//        guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
+//        
+//        var pkts = [[Int]]()
+//        var pkt = [Int]()
+//        let idPro = (pgm["id_pro"]! as! Int ) - 1
+//        var dataSave = 0
+//        var outImg = [Int]()
+//        
+//        if let ds = pgm["data_save"] as? Int{
+//            dataSave = ds
+//        }
+//        let region = (pgm["list_region"]! as! [[String:Any]]).first
+//        var idRect = 0
+//        
+//        if let id_rect = region?["id_rect"] as? Int {
+//            idRect = id_rect - 1
+//        }
+//
+//        let item = (region?["list_item"]! as! [[String:Any]]).first
+//        var idItem = 0
+//        if let id_item = region?["id_item"] as? Int {
+//            idItem = id_item - 1
+//        }
+//    
+//        guard let bmp_data = image.toData(options: [:], type: .bmp) else {return nil}
+//        
+//        var img = [UInt8](bmp_data)
+//        img.removeFirst(0x36)    // remove header , because width and size should be 64x64
+//       
+//            // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+//        if prop["send_gif_src"] as! Int != nil {
+//            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+//            //                    sno += 2
+//        }
+//        else{
+//            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+//            //            sno += 2
+//        }
+//
+//        
+//        let totalImgDataSize = outImg.count
+//        let maxBlockSize = 0x400
+//        let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
+//        
+//        for currentBlock in 0..<totalBlocks {
+//            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
+//            let block = Array(data_slice)
+//            outImg.removeFirst(min(outImg.count,maxBlockSize))
+//            var pkt = [Int]()
+//            writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
+//            pkt.writeInt(0x712,2,nil)
+//            pkt.writeInt(totalBlocks,2,nil)
+//            pkt.writeInt(currentBlock,2, nil)
+//            pkt.writeInt(maxBlockSize,2,nil)
+//            pkt.writeInt(0x1300,2, nil)
+//            writeLenLen(&pkt, block.count)
+//            
+//            pkt += block
+//            var flag:Bool? = nil
+//            pkt = makePacket(pkt, sno, 0x41, 2, &flag)
+//            //                    sno += 1
+//            pkts.append(pkt)
+//        }
+//        return pkts
+//        
+//    }
 //    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
 //
 //        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
@@ -397,33 +488,31 @@
 //        
 //        
 //        var img = [UInt8]()
-//        var count = 0
-//        CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
-//            for frame in allFrames {
-//                
-//                guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
-//                
-//                var frame_bytes = [UInt8](bmp_data)
-//                frame_bytes.removeFirst(54) // remove header only raw data
-//                if (count>=42 && count<72){
-//                    img += frame_bytes
-//                }
-//                
-//                
-//                
-//                count += 1
-//            }
-//        }
 //        
-//        
-//            print("FRAMES ADDED: \(count)")
-//        
-//            // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+//        // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
 //        if prop["send_gif_src"] as! Int != nil {
+//            var count = 0
+//            CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
+//                for frame in allFrames {
+//                    
+//                    guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
+//                    
+//                    var frame_bytes = [UInt8](bmp_data)
+//                    frame_bytes.removeFirst(54) // remove header only raw data
+//                    if (count>=72){
+//                        img += frame_bytes
+//                    }
+//                    count += 1
+//                }
+//            }
+//            
+//            print("FRAMES ADDED: \(count)")
+//            
 //            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
 //            //                    sno += 2
 //        }
 //        else{
+//            img = [UInt8](data)
 //            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
 //            //            sno += 2
 //        }

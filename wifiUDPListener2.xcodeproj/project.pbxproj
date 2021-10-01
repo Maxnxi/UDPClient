@@ -19,6 +19,15 @@
 		0519982D26FCD30000703657 /* tlv9.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519982C26FCD30000703657 /* tlv9.swift */; };
 		0519982F26FCDE7E00703657 /* tlv10.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519982E26FCDE7E00703657 /* tlv10.swift */; };
 		0519983126FCE21400703657 /* tlv11.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519983026FCE21400703657 /* tlv11.swift */; };
+		0519983526FE00DD00703657 /* tlv12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519983426FE00DD00703657 /* tlv12.swift */; };
+		0519983726FE01A800703657 /* tlv12.2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519983626FE01A800703657 /* tlv12.2.swift */; };
+		052988622705A4E800BAC63C /* tlv_13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052988612705A4E800BAC63C /* tlv_13.swift */; };
+		052988642705A5FD00BAC63C /* tlv_14.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052988632705A5FD00BAC63C /* tlv_14.swift */; };
+		052988662705A67300BAC63C /* tlv_15.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052988652705A67300BAC63C /* tlv_15.swift */; };
+		052988682705A6F700BAC63C /* tlv_16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052988672705A6F700BAC63C /* tlv_16.swift */; };
+		0529886A2705A7AD00BAC63C /* tlv_17.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052988692705A7AD00BAC63C /* tlv_17.swift */; };
+		0529886C2705A83200BAC63C /* tlv_18.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529886B2705A83200BAC63C /* tlv_18.swift */; };
+		0529889C27072F0B00BAC63C /* tlv_19.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0529889B27072F0B00BAC63C /* tlv_19.swift */; };
 		055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBD826EDCFBC003C0515 /* SocketGateway.swift */; };
 		055EEBDC26EF0FBA003C0515 /* DecodeLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDB26EF0FBA003C0515 /* DecodeLib.swift */; };
 		055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055EEBDD26EF0FEC003C0515 /* IntReader.swift */; };
@@ -57,6 +66,15 @@
 		0519982C26FCD30000703657 /* tlv9.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv9.swift; sourceTree = "<group>"; };
 		0519982E26FCDE7E00703657 /* tlv10.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv10.swift; sourceTree = "<group>"; };
 		0519983026FCE21400703657 /* tlv11.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv11.swift; sourceTree = "<group>"; };
+		0519983426FE00DD00703657 /* tlv12.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv12.swift; sourceTree = "<group>"; };
+		0519983626FE01A800703657 /* tlv12.2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv12.2.swift; sourceTree = "<group>"; };
+		052988612705A4E800BAC63C /* tlv_13.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_13.swift; sourceTree = "<group>"; };
+		052988632705A5FD00BAC63C /* tlv_14.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_14.swift; sourceTree = "<group>"; };
+		052988652705A67300BAC63C /* tlv_15.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_15.swift; sourceTree = "<group>"; };
+		052988672705A6F700BAC63C /* tlv_16.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_16.swift; sourceTree = "<group>"; };
+		052988692705A7AD00BAC63C /* tlv_17.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_17.swift; sourceTree = "<group>"; };
+		0529886B2705A83200BAC63C /* tlv_18.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_18.swift; sourceTree = "<group>"; };
+		0529889B27072F0B00BAC63C /* tlv_19.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tlv_19.swift; sourceTree = "<group>"; };
 		055EEBD826EDCFBC003C0515 /* SocketGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketGateway.swift; sourceTree = "<group>"; };
 		055EEBDB26EF0FBA003C0515 /* DecodeLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeLib.swift; sourceTree = "<group>"; };
 		055EEBDD26EF0FEC003C0515 /* IntReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntReader.swift; sourceTree = "<group>"; };
@@ -156,6 +174,15 @@
 				0579E14426FB490E00F08DF7 /* Extensions.swift */,
 				0579E14026FB490E00F08DF7 /* tests.json */,
 				0579E14126FB490E00F08DF7 /* TestStructure.swift */,
+				0529889B27072F0B00BAC63C /* tlv_19.swift */,
+				0529886B2705A83200BAC63C /* tlv_18.swift */,
+				052988692705A7AD00BAC63C /* tlv_17.swift */,
+				052988672705A6F700BAC63C /* tlv_16.swift */,
+				052988652705A67300BAC63C /* tlv_15.swift */,
+				052988632705A5FD00BAC63C /* tlv_14.swift */,
+				052988612705A4E800BAC63C /* tlv_13.swift */,
+				0519983626FE01A800703657 /* tlv12.2.swift */,
+				0519983426FE00DD00703657 /* tlv12.swift */,
 				0519983026FCE21400703657 /* tlv11.swift */,
 				0519982E26FCDE7E00703657 /* tlv10.swift */,
 				0519982C26FCD30000703657 /* tlv9.swift */,
@@ -245,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0579E14826FB490E00F08DF7 /* CGifManager.swift in Sources */,
+				052988642705A5FD00BAC63C /* tlv_14.swift in Sources */,
 				0579E15526FBC0DA00F08DF7 /* tlv6.swift in Sources */,
 				0519983126FCE21400703657 /* tlv11.swift in Sources */,
 				0519982D26FCD30000703657 /* tlv9.swift in Sources */,
@@ -252,17 +280,25 @@
 				0519982B26FCCDA100703657 /* tlv8.swift in Sources */,
 				0579E15326FBBA3B00F08DF7 /* tlv5.swift in Sources */,
 				055EEBDE26EF0FEC003C0515 /* IntReader.swift in Sources */,
+				052988682705A6F700BAC63C /* tlv_16.swift in Sources */,
 				0503A22426ECA3B3001BE3AD /* Extensions_String_Data.swift in Sources */,
 				05A7CDC726F88F29000FED61 /* oldtlv.swift in Sources */,
 				0503A22126EC9F5F001BE3AD /* SocketUDP.swift in Sources */,
 				0579E15126FBB6EF00F08DF7 /* tlv4.42.swift in Sources */,
 				0579E14726FB490E00F08DF7 /* tlv.swift in Sources */,
+				0519983526FE00DD00703657 /* tlv12.swift in Sources */,
+				0529889C27072F0B00BAC63C /* tlv_19.swift in Sources */,
 				055EEBDC26EF0FBA003C0515 /* DecodeLib.swift in Sources */,
 				0579E14B26FB9F4A00F08DF7 /* tlv1.swift in Sources */,
 				0579E14D26FBA22200F08DF7 /* tlv2.swift in Sources */,
+				0519983726FE01A800703657 /* tlv12.2.swift in Sources */,
+				052988662705A67300BAC63C /* tlv_15.swift in Sources */,
+				0529886A2705A7AD00BAC63C /* tlv_17.swift in Sources */,
 				055EEBD926EDCFBC003C0515 /* SocketGateway.swift in Sources */,
 				0503A21126EC9E90001BE3AD /* ViewController.swift in Sources */,
 				055EEBE226EF76B6003C0515 /* SocketUDP2Broadcast.swift in Sources */,
+				0529886C2705A83200BAC63C /* tlv_18.swift in Sources */,
+				052988622705A4E800BAC63C /* tlv_13.swift in Sources */,
 				0579E14626FB490E00F08DF7 /* TestStructure.swift in Sources */,
 				0576CDEF26F35D0D00A62B7C /* CodeLib.swift in Sources */,
 				0579E15726FBC3FE00F08DF7 /* tlv7.swift in Sources */,
