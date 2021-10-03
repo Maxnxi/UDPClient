@@ -10,7 +10,7 @@ import Compression
 import UIKit
 import CoreGraphics
 
-extension Array where Element == Int {
+extension Array where Element == UInt8 {
     public mutating func writeInt(_ value:Int,_ bytes:Int,_ direction:String?) {
         var dir = 0
         if (direction != nil && direction=="BE"){
@@ -18,11 +18,11 @@ extension Array where Element == Int {
         }
         if dir == 0 {
             for idx in 0..<bytes{
-                self.append((value >> (8 * idx)) & 0xFF)
+                self.append(UInt8((value >> (8 * idx)) & 0xFF))
             }
         }else{
             for idx in (0..<bytes).reversed(){
-                self.append((value >> (8 * idx)) & 0xFF)
+                self.append(UInt8((value >> (8 * idx)) & 0xFF))
             }
         }
     }
@@ -48,8 +48,8 @@ final class tlv {
         "pgm_flicker": 0x2D,
         "imsi": 0x12C
     ]
-    private func parseCommand(_ obj:[String:Any]? , _ sno:Int)->[[Int]]?{
-        var pkt = [Int]()
+    private func parseCommand(_ obj:[String:Any]? , _ sno:Int)->[[UInt8]]?{
+        var pkt = [UInt8]()
         var bin_code:Int? = nil
         if let cmd = obj?["cmd"] as? [String:Any]{
             if let value = cmd["get"] as? String {
@@ -72,10 +72,10 @@ final class tlv {
     }
     
     
-    private func getColorMatrix(_ img:[UInt8], _ offset:Int, _ outImg: inout [Int], _ width:Int, _ height:Int,_ rowStripe:Int, _ color_plane:Int, _ bit:Int){
+    private func getColorMatrix(_ img:[UInt8], _ offset:Int, _ outImg: inout [UInt8], _ width:Int, _ height:Int,_ rowStripe:Int, _ color_plane:Int, _ bit:Int){
         for cur_y in (0..<height).reversed(){
             var set_bit = 0
-            var out_color = 0
+            var out_color:UInt8 = 0
             for cur_x in 0..<width {
                 let y = cur_y * rowStripe + offset
                 let x = cur_x * 3 + color_plane
@@ -95,24 +95,24 @@ final class tlv {
             }
         }
     }
-    private func writeDataTag(_ pkt: inout [Int], _ tag:Int, _ value:Int) {
+    private func writeDataTag(_ pkt: inout [UInt8], _ tag:UInt8, _ value:UInt8) {
         pkt.append(tag);
         pkt.append(1);
         pkt.append(value);
     }
-    private func writePropertyTags(_ pkt: inout [Int], _ data_save:Int, _ id_pro:Int, _ id_rect:Int, _ id_item:Int) {
-        writeDataTag(&pkt, 9, 1 - data_save);
-        writeDataTag(&pkt, 0xC, id_pro);
-        writeDataTag(&pkt, 0xD, id_rect);
-        writeDataTag(&pkt, 0xE, id_item);
+    private func writePropertyTags(_ pkt: inout [UInt8], _ data_save:Int, _ id_pro:Int, _ id_rect:Int, _ id_item:Int) {
+        writeDataTag(&pkt, 9, UInt8(1 - data_save))
+        writeDataTag(&pkt, 0xC, UInt8(id_pro))
+        writeDataTag(&pkt, 0xD, UInt8(id_rect))
+        writeDataTag(&pkt, 0xE, UInt8(id_item))
     }
-    private func writeImageFrameHeader(_ pkt: inout [Int], _ item:[String:Any], _ prop:[String:Any], _ width:Int, _ height:Int, _ frameNo: Int, _ typeColor:Int, _ gray: Int) {
+    private func writeImageFrameHeader(_ pkt: inout [UInt8], _ item:[String:Any], _ prop:[String:Any], _ width:Int, _ height:Int, _ frameNo: Int, _ typeColor:Int, _ gray: Int) {
         if let ani = item["info_animate"] as? [String:Any] {
             pkt.append(0x14)
             pkt.append(3)
-            pkt.append(ani["model_normal"]! as! Int)
-            pkt.append(ani["speed"]! as! Int - 1)
-            pkt.append(((item["isGif"]! as! Int) != 0) ? 0 : ani["time_stay"]! as! Int)
+            pkt.append(ani["model_normal"]! as! UInt8)
+            pkt.append(ani["speed"]! as! UInt8 - 1)
+            pkt.append(((item["isGif"]! as! Int) != 0) ? 0 : ani["time_stay"]! as! UInt8)
         }
         
         // Writing data item control block
@@ -129,11 +129,11 @@ final class tlv {
             timeDelay = play_loop
         }
         
-        pkt.append(timeType)
+        pkt.append(UInt8(timeType))
         pkt.writeInt(timeDelay, 2, nil)
         pkt.append(7)
-        pkt.append(typeColor)
-        pkt.append(gray + 1)
+        pkt.append(UInt8(typeColor))
+        pkt.append(UInt8(gray + 1))
         pkt.writeInt(frameNo, 2,nil)
         pkt.writeInt(0xFFFF, 2, nil)
         pkt.writeInt(width, 2,nil)
@@ -141,13 +141,13 @@ final class tlv {
         // TODO: check animation type and use width or height based on those flags
         pkt.writeInt(height, 2, nil)
     }
-    private func writeGifImageFrameHeader(_ pkt: inout [Int], _ item:[String:Any], _ prop:[String: Any],_  width:UInt32, _ height:UInt32, _ countPage:Int, _ typeColor:Int, _ gray:Int) {
+    private func writeGifImageFrameHeader(_ pkt: inout [UInt8], _ item:[String:Any], _ prop:[String: Any],_  width:UInt32, _ height:UInt32, _ countPage:Int, _ typeColor:Int, _ gray:Int) {
         if let ani = item["info_animate"] as? [String:Any]{
             pkt.append(0x14)
             pkt.append(3)
-            pkt.append(ani["model_normal"]! as! Int)
-            pkt.append(ani["speed"]! as! Int - 1)
-            pkt.append((item["isGif"] as! Int != 0) ? 0 : ani["time_stay"]! as! Int)
+            pkt.append(ani["model_normal"]! as! UInt8)
+            pkt.append(ani["speed"]! as! UInt8 - 1)
+            pkt.append((item["isGif"] as! UInt8 != 0) ? 0 : ani["time_stay"]! as! UInt8)
         }
         
         // Writing data item control block
@@ -161,31 +161,31 @@ final class tlv {
         } else if let play_loop = prop["play_loop"] as? Int {
             timeDelay = play_loop
         }
-        pkt.append(timeType)
+        pkt.append(UInt8(timeType))
         pkt.writeInt(timeDelay, 2,nil)
         pkt.append(8)
-        pkt.append(typeColor)
-        pkt.append(gray + 1)
+        pkt.append(UInt8(typeColor))
+        pkt.append(UInt8(gray + 1))
         pkt.writeInt(countPage, 2,nil)
         pkt.writeInt(Int(width), 2,nil)
         pkt.writeInt(Int(height), 2, nil)
     }
-    private func writeLenLen(_ pkt: inout [Int],  _ size:Int) {
+    private func writeLenLen(_ pkt: inout [UInt8],  _ size:Int) {
         if (size < 0x80) {
-            pkt.append(size)
+            pkt.append(UInt8(size))
         } else if (size < 0x100) {
             pkt.append(0x81)
-            pkt.append(size)
+            pkt.append(UInt8(size))
         } else {
             pkt.append(0x82)
             pkt.writeInt(size, 2, nil)
         }
     }
-    private func makePacket(_ pkt:[Int], _ sno:Int, _ version:Int,_ cmd: Int, _ writeLengthFlag: inout Bool?)->[Int]{
+    private func makePacket(_ pkt:[UInt8], _ sno:Int, _ version:UInt8,_ cmd: UInt8, _ writeLengthFlag: inout Bool?)->[UInt8]{
         if writeLengthFlag == nil {
             writeLengthFlag = false
         }
-        var result = [Int]()
+        var result = [UInt8]()
         var packetLength = pkt.count
         var offset = 0
         if  writeLengthFlag == true {
@@ -203,23 +203,23 @@ final class tlv {
         if (version & 0x80 == 0x80) {
             var cs = 0
             for idx in offset..<result.count {
-                cs += result[idx]
+                cs += Int(result[idx])
             }
             result.writeInt(cs, 2, nil)
         }
         return result
     }
-    private func makeDataPropertyProgram(_ propertyPro:[String:Any?],_ infoPos:[String:Any], _ idPro:Int,_ width:Int, _ height:Int, _ dataSave:Int)-> [Int] {
-        var result = [Int]()
+    private func makeDataPropertyProgram(_ propertyPro:[String:Any?],_ infoPos:[String:Any], _ idPro:Int,_ width:Int, _ height:Int, _ dataSave:Int)-> [UInt8] {
+        var result = [UInt8]()
         
         if (idPro < 255) {
             result.writeInt(0x208, 3, nil)
-            result.append(idPro);
+            result.append(UInt8(idPro));
         }
-        writeDataTag(&result, 9, 1 - dataSave);
-        writeDataTag(&result, 0xC, idPro);
+        writeDataTag(&result, 9, UInt8(1 - dataSave));
+        writeDataTag(&result, 0xC, UInt8(idPro));
         result.writeInt(0x61C, 2, nil);
-        result.append(propertyPro["type_bg"]! as! Int);
+        result.append(propertyPro["type_bg"]! as! UInt8);
         result.append(0);
         result.writeInt(((propertyPro["play_loop"] as? Int) != nil) ? propertyPro["play_loop"]! as! Int : 1, 2, nil)
         
@@ -230,13 +230,13 @@ final class tlv {
         result.writeInt(0x91D, 2, nil)
         result.writeInt(infoPos["x"]! as! Int, 2, nil)
         result.writeInt(infoPos["y"]! as! Int, 2, nil)
-        result.writeInt(((infoPos["w"] as? Int) != nil) ? infoPos["w"]! as! Int:width, 2, nil)
-        result.writeInt(((infoPos["h"] as? Int) != nil) ? infoPos["h"]! as! Int:height,2, nil)
+        result.writeInt(((infoPos["w"] as? Int) != nil) ? infoPos["w"]! as! Int : width, 2, nil)
+        result.writeInt(((infoPos["h"] as? Int) != nil) ? infoPos["h"]! as! Int : height,2, nil)
         result.append(0)  // TODO: background
         return result
     }
-    private func makeBmpData(_ pkts: inout [[Int]], _ img: inout [UInt8], _ outImg: inout [Int], _ item:[String:Any], _ prop:[String: Any], _ region: [String:Any], _ idPro: Int, _ idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
-        var delay_frame = [Int]()
+    private func makeBmpData(_ pkts: inout [[UInt8]], _ img: inout [UInt8], _ outImg: inout [UInt8], _ item:[String:Any], _ prop:[String: Any], _ region: [String:Any], _ idPro: Int, _ idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
+        var delay_frame = [UInt8]()
         var width = readUInt32LE(img, 0x12)
         var height = readUInt32LE(img, 0x16)
         if height > 0xffff{
@@ -262,7 +262,7 @@ final class tlv {
 //        pkts.append(pkt);
         sno += 1
         
-        var pkt = [Int]()
+        var pkt = [UInt8]()
         writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
         if let df = item["delay_frame"] as? [Int] {
             if (df.count>0){
@@ -314,36 +314,34 @@ final class tlv {
             }
         }
     }
-    private func makeGifData(_ pkts: inout [[Int]], _ img:[UInt8], _ outImg: inout [Int], _ item:[String:Any], _  prop:[String:Any], _ region:[String:Any], _ idPro:Int,_  idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
-        let tmp = (prop["width"]! as! Int * 3) / 4
-        let rowStripe = (tmp - Int(tmp)) > 0 ? Int(tmp + 1) * 4 : tmp * 4
-        let imgSize = rowStripe * (prop["height"]! as! Int) + 0x36
-        let countPage = Int(img.count / 0x400);
-        
-        var typeColor = 3
-        if (prop["type_color"] as? Int) != nil {
-            typeColor = prop["type_color"]! as! Int
-        }
-        var gray = 4
-        if (prop["gray"] as? Int) != nil {
-            gray = prop["gray"]! as! Int
-        }
-        
-        
-        
+    private func makeGifData(_ pkts: inout [[UInt8]], _ img:[UInt8], _ outImg: inout [UInt8], _ item:[String:Any], _  prop:[String:Any], _ region:[String:Any], _ idPro:Int,_  idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
+//        let tmp = (prop["width"]! as! Int * 3) / 4
+//        let rowStripe = (tmp - Int(tmp)) > 0 ? Int(tmp + 1) * 4 : tmp * 4
+//        let imgSize = rowStripe * (prop["height"]! as! Int) + 0x36
+//        var countPage = Int(img.count / 0x400);
+//
+//        var typeColor = 3
+//        if (prop["type_color"] as? Int) != nil {
+//            typeColor = prop["type_color"]! as! Int
+//        }
+//        var gray = 4
+//        if (prop["gray"] as? Int) != nil {
+//            gray = prop["gray"]! as! Int
+//        }
+//
         var pkt = makeDataPropertyProgram(prop, region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
         var flag:Bool? = nil
         pkt = makePacket(pkt, sno, 0xC1, 2, &flag)
         sno += 1
         pkts.append(pkt)
-        pkt = [Int]()
+        pkt = [UInt8]()
         writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
         if let ani = item["info_animate"] as? [String:Any] {
             pkt.append(0x14)
             pkt.append(3)
-            pkt.append(ani["model_normal"]! as! Int)
-            pkt.append(ani["speed"]! as! Int - 1)
-            pkt.append(((item["isGif"] as? Int) != nil) ? 0 : ani["time_stay"]! as! Int)
+            pkt.append(ani["model_normal"]! as! UInt8)
+            pkt.append(ani["speed"]! as! UInt8 - 1)
+            pkt.append(((item["isGif"] as? UInt8) != nil) ? 0 : ani["time_stay"]! as! UInt8)
         }
         
         pkt.writeInt(0x411,2, nil)
@@ -354,7 +352,7 @@ final class tlv {
         sno += 1
         pkts.append(pkt)
         for byte in img {
-            outImg.append(Int(byte))
+            outImg.append(byte)
         }
 //        outImg += img   //        img.map(val => outImg.push(val))
     }
@@ -382,15 +380,14 @@ final class tlv {
         }
         return nil
     }
-    private func getListOfPackets(_ obj:[String:Any], _ sno: inout Int, image: UIImage)->[[Int]]?{
+    private func getListOfPackets(_ obj:[String:Any], _ sno: inout Int, image: UIImage)->[[UInt8]]?{
         guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
         guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
         
-        var pkts = [[Int]]()
-        var pkt = [Int]()
+        var pkts = [[UInt8]]()
         let idPro = (pgm["id_pro"]! as! Int ) - 1
         var dataSave = 0
-        var outImg = [Int]()
+        var outImg = [UInt8]()
         
         if let ds = pgm["data_save"] as? Int{
             dataSave = ds
@@ -414,7 +411,7 @@ final class tlv {
         img.removeFirst(0x36)    // remove header , because width and size should be 64x64
        
             // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
-        if prop["send_gif_src"] as! Int != nil {
+        if prop["send_gif_src"] as? UInt8 != nil {
             makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
             //                    sno += 2
         }
@@ -432,7 +429,7 @@ final class tlv {
             let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
             let block = Array(data_slice)
             outImg.removeFirst(min(outImg.count,maxBlockSize))
-            var pkt = [Int]()
+            var pkt = [UInt8]()
             writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
             pkt.writeInt(0x712,2,nil)
             pkt.writeInt(totalBlocks,2,nil)
@@ -450,15 +447,14 @@ final class tlv {
         return pkts
         
     }
-    public func parseCompressedImage(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
+    public func parseCompressedImage(_ obj:[String:Any], _ sno: inout Int)->[[UInt8]]? {
         guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
         guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
         
-        var pkts = [[Int]]()
-        var pkt = [Int]()
+        var pkts = [[UInt8]]()
         let idPro = (pgm["id_pro"]! as! Int ) - 1
         var dataSave = 0
-        var outImg = [Int]()
+        var outImg = [UInt8]()
         
         if let ds = pgm["data_save"] as? Int{
             dataSave = ds
@@ -493,7 +489,7 @@ final class tlv {
                 img.removeFirst(0x36)
                 
                 // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
-                if prop["send_gif_src"] as! Int != nil {
+                if prop["send_gif_src"] as? Int != nil {
                 
                     makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
                     //                    sno += 2
@@ -512,7 +508,7 @@ final class tlv {
                     let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
                     let block = Array(data_slice)
                     outImg.removeFirst(min(outImg.count,maxBlockSize))
-                    var pkt = [Int]()
+                    var pkt = [UInt8]()
                     writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
                     pkt.writeInt(0x712,2,nil)
                     pkt.writeInt(totalBlocks,2,nil)
@@ -539,16 +535,15 @@ final class tlv {
         
         return nil
     }
-    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
+    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[UInt8]]? {
 
         guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
         guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
         
-        var pkts = [[Int]]()
-        var pkt = [Int]()
+        var pkts = [[UInt8]]()
         let idPro = (pgm["id_pro"]! as! Int ) - 1
         var dataSave = 0
-        var outImg = [Int]()
+        var outImg = [UInt8]()
         
         if let ds = pgm["data_save"] as? Int{
             dataSave = ds
@@ -577,31 +572,31 @@ final class tlv {
         var img = [UInt8]()
         
         // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
-        if prop["send_gif_src"] as! Int != nil {
-            var count = 0
-            CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
-                for frame in allFrames {
-                    
-                    guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
-                    
-                    var frame_bytes = [UInt8](bmp_data)
-                    frame_bytes.removeFirst(54) // remove header only raw data
-                    if (count>=72){
-                        img += frame_bytes
+        let sendGifSrc = prop["send_gif_src"] as? Int
+        if  sendGifSrc != nil {
+            if (sendGifSrc == 0) {
+                var count = 0
+                CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
+                    for frame in allFrames {
+                        
+                        guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
+                        
+                        var frame_bytes = [UInt8](bmp_data)
+                        frame_bytes.removeFirst(54) // remove header only raw data
+                        if (count>=72){
+                            img += frame_bytes
+                        }
+                        count += 1
                     }
-                    count += 1
                 }
+                
+                print("FRAMES ADDED: \(count)")
+                
+                makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+            } else {
+                img = [UInt8](data)
+                makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
             }
-            
-            print("FRAMES ADDED: \(count)")
-            
-            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
-            //                    sno += 2
-        }
-        else{
-            img = [UInt8](data)
-            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
-            //            sno += 2
         }
 
         
@@ -610,10 +605,10 @@ final class tlv {
         let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
         
         for currentBlock in 0..<totalBlocks {
-            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
-            let block = Array(data_slice)
-            outImg.removeFirst(min(outImg.count,maxBlockSize))
-            var pkt = [Int]()
+            let start_pos = currentBlock * maxBlockSize
+            let end_pos = min((currentBlock + 1) * maxBlockSize, outImg.count)
+            let block = outImg[start_pos..<end_pos]
+            var pkt = [UInt8]()
             writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
             pkt.writeInt(0x712,2,nil)
             pkt.writeInt(totalBlocks,2,nil)
@@ -625,17 +620,13 @@ final class tlv {
             pkt += block
             var flag:Bool? = nil
             pkt = makePacket(pkt, sno, 0x41, 2, &flag)
-            //                    sno += 1
             pkts.append(pkt)
         }
         return pkts
-        
-        //          TO DO:
-        //        require('fs').writeFileSync(`./img.${prop.send_gif_src ? "gif" : "bmp"}`, img)
     }
     
-    public func parseJson(_ obj:[String:Any], _ sno: inout Int) -> [String]?{
-        var p: [[Int]]? = nil
+    public func parseJson(_ obj:[String:Any], _ sno: inout Int) -> [[UInt8]]? {
+        var p: [[UInt8]]? = nil
         if obj["pkts_program"] != nil {
             p = parsePacketsProgram(obj, &sno)
         }else if obj["cmd"] != nil {
@@ -644,16 +635,7 @@ final class tlv {
             print("Incorrect object passed")
         }
         guard let pkts = p else {return nil}
-        var str = ""
-        var output = [String]()
-        for pkt in pkts{
-            for byte in pkt {
-                str += String(format:"%02X", byte)
-            }
-            output.append(str)
-            str = ""
-        }
-        return output
+        return pkts
     }
     private func readDevInfo(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]? {
         //let string = payload.toString("ascii");

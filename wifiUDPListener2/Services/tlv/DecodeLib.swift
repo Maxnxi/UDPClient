@@ -353,7 +353,7 @@ class DecodeLib: IntReader {
                                 //makeLittle(payload, 3), // payload.readInt16LE(3)
                             "polar_data": payload[5],
                             "polar_oe": payload[6],
-                            "type_color": payload[7] == 0 ? 1 : payload[7],
+                            "type_color": payload[7] == 0 ? UInt8(1) : payload[7],
                             "gray": payload[8] - 1,
                             "decoder": 1,
                             "type_scan": 1,

@@ -41,34 +41,31 @@ class ViewController: UIViewController {
 //        }
         
         // version #2
-//        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return }
-//                do {
-//                    let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-//                    let tests = try JSONDecoder().decode(Tests.self, from: data)
-//                    var sno = 4294901762
-//                    let gif_request = try tests[6].json.asDictionary()
-//                    guard let binaryStrings = tlv.shared.parseJson(gif_request, &sno) else {
-//                        print("Assul err")
-//                        return }
-//
-//
-//                    // send binaryString to LED
-//                    socketGateway = SocketGateway(messageArr: binaryStrings)
-//                    socketGateway?.startSend()
-//
-//                } catch {
-//                   print("Error while converting into data")
-//                }
-        //version #3
-        guard let image = UIImage(named: "pokemonRun9.gif"),
-              let binaryStrings = tlv.shared.parseUIImage(uiimage: image) else {
-            print("Assul err")
-            return
-            
+        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return }
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            let tests = try JSONDecoder().decode(Tests.self, from: data)
+            var sno = 4294901762
+            let gif_request = try tests[6].json.asDictionary()
+            guard let binaryStrings = tlv.shared.parseJson(gif_request, &sno) else {
+                print("Assul err")
+                return }
+
+
+            // send binaryString to LED
+            socketGateway = SocketGateway(packets: binaryStrings)
+            socketGateway?.startSend()
+
+        } catch {
+           print("Error while converting into data")
         }
-        socketGateway = SocketGateway(messageArr: binaryStrings)
-        socketGateway?.startSend()
-        
+        //version #3
+//        guard let image = UIImage(named: "pokemonRun9.gif"),
+//              let binaryStrings = tlv.shared.parseUIImage(uiimage: image) else {
+//            print("Assul err")
+//            return
+//        }
+
 //        socketGateway = SocketGateway(messageArr: binaryStrings)
 //        socketGateway?.startSend()
     }
