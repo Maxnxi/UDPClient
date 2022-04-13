@@ -15,16 +15,16 @@ class SocketGateway {
     
     //var isFinished: Bool = false
     //Pause Timer
-    //var pauseTimer = Timer()
-//    var isPaused: Bool = false
-//    var countPauseSeconds = 0 {
-//        didSet {
-//            print("Pause Timer: ", countPauseSeconds)
-//            if countPauseSeconds == 3 && isPaused == true {
-//                stopPauseSendAgain()
-//            }
-//        }
-//    }
+    var pauseTimer = Timer()
+    //var isPaused: Bool = false
+    var countPauseSeconds: Double = 0.0 {
+        didSet {
+            print("Pause Timer: ", countPauseSeconds)
+            if countPauseSeconds == 0.75 {
+                stopPauseSendAgain()
+            }
+        }
+    }
     //end
     
     //Counter of main loops // количество полных повторных загрузок = 1
@@ -59,11 +59,12 @@ class SocketGateway {
     var messageArr: [String]
     
     //Сокет
-    //let socket: SocketUDP?
+    let socket: SocketUDP
     
     //статус сокета
     var currentState: StateOfSocket? {
         didSet {
+            pauseTimer.invalidate()
             print("Change status", currentState as Any)
             //pauseTimer.invalidate()
             
@@ -82,7 +83,7 @@ class SocketGateway {
                 errorCounter += 1
                 send(nmbrPckt: numberOfPacket)
             } else if currentState == .pause {
-                pause()
+                pauseFunc()
             } else if currentState == .finish {
                 finish()
             } else if currentState == .finishWithError {
@@ -97,9 +98,19 @@ class SocketGateway {
         self.messageArr = messageArr
         self.totalCountOfPackets = messageArr.count
         
-        //socket = SocketUDP()
+        socket = SocketUDP()
+        socket.socketDelegate = self
 
-        print("Inited")
+        if messageArr.count >= 3 {
+            print("Inited")
+            print("Element #1 of array")
+            print(messageArr[0])
+            print("Element #2 of array")
+            print(messageArr[1])
+            print("Element #3 of array")
+            print(messageArr[2])
+        }
+        
 //        repeat {
 //            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
 //                if self.isFinished == true {
@@ -114,7 +125,7 @@ class SocketGateway {
         print("Object SocketGateway deinit")
     }
     
-    func startSend(){
+    public func startSend() {
         currentState = .readyToSend
 //        socket?.socketDelegate = self
     }
@@ -123,15 +134,15 @@ class SocketGateway {
         if errorCounter == errorLimits {
             currentState = .finishWithError
         }
-        let socket = SocketUDP(message: messageArr[nmbrPckt])
-        socket.socketDelegate = self
-        //socket?.connectSendMessageReceiveAnswer(message: messageArr[nmbrPckt])
+        //let socket = SocketUDP(message: messageArr[nmbrPckt])
+        //socket.socketDelegate = self
+        socket.connectSendMessageReceiveAnswer(message: messageArr[nmbrPckt])
     }
     
-    func pause() {
+    func pauseFunc() {
         //isPaused = true
         print("Pause")
-        //startPauseTimer()
+        startPauseTimer()
     }
     
     func stopPauseSendAgain() {
@@ -186,25 +197,38 @@ extension SocketGateway: SocketUDPDelegate {
 }
 
 extension SocketGateway {
-//    func startPauseTimer() {
-//        //pauseTimer.invalidate()
-//        countPauseSeconds = 0
-//        //pauseTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerAction(timer:)), userInfo: nil, repeats: true)
-//        let timeQueue = DispatchQueue.init(label: "Timer")
-//        timeQueue.sync {
-//            repeat {
-//                Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
-//                    DispatchQueue.main.async {
-//                        self.countPauseSeconds += 1
-//                        print("timer: ", self.countPauseSeconds)
-//                    }
-//                }
-//            } while countPauseSeconds == 3
+    func startPauseTimer() {
+        //pauseTimer.invalidate()
+        //countPauseSeconds = 0.0
+        print(#function)
+        //version #3
+        var countPeriods = 0.0
+        pauseTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { timer in
+            countPeriods += 0.25
+            if countPeriods >= 0.75 {
+                timer.invalidate()
+            }
+        }
+        //version #2
+        //let timer = Timer.scheduledTimer(timeInterval: TimeInterval(0.25), target: self, selector: #selector(timerAction(timer:)), userInfo: nil, repeats: true)
+        //pauseTimer.fire()
+        //version #1
+//        let timeQueue = DispatchQueue(label: "Timer")
+//        timeQueue.async {
+            
+//            self.pauseTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { timer in
+////                    DispatchQueue.main.async {
+//                    self.countPauseSeconds += 0.25
+////                        print("timer: ", self.countPauseSeconds)
+////                    }
+////                }
+//
 //        }
-//        
-//    }
+        
+    }
     
 //    @objc func timerAction(timer:Timer!) {
-//        countPauseSeconds += 1
+//        countPauseSeconds += 0.25
+//        print(#function)
 //    }
 }

@@ -35,35 +35,35 @@ class CreateBinaryPacketToSend {
         }
     }
     
-    func createBinaryStringFirstCheck(type: TypeOfPacket, sno: Int) -> [String] {
-        let stringArr: [String] = ["0"]
-        var sno = sno
-        if type == .devInfo {
-            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-            guard let result = convertIntArrToStringArr(intArr: res) else {
-                print("error in createBinaryString")
-                return ["0"]
-            }
-            return result
-        }
-    return stringArr
-    }
-    
-    func createBinaryStringGetParameters(type: TypeOfPacket, deviceId: String, sno: Int) -> [String] {
-        let stringArr: [String] = ["0"]
-        var sno = sno
-        if type == .paramDev {
-            dictionaryTmp["ids_dev"] = deviceId
-            dictionaryTmp["sno"] = sno
-            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-            guard let result = convertIntArrToStringArr(intArr: res) else {
-                print("error in createBinaryString")
-                return ["0"]
-            }
-            return result
-        }
-        return stringArr
-    }
+//    func createBinaryStringFirstCheck(type: TypeOfPacket, sno: Int) -> [String] {
+//        let stringArr: [String] = ["0"]
+//        var sno = sno
+//        if type == .devInfo {
+//            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+//            guard let result = convertIntArrToStringArr(intArr: res) else {
+//                print("error in createBinaryString")
+//                return ["0"]
+//            }
+//            return result
+//        }
+//    return stringArr
+//    }
+//
+//    func createBinaryStringGetParameters(type: TypeOfPacket, deviceId: String, sno: Int) -> [String] {
+//        let stringArr: [String] = ["0"]
+//        var sno = sno
+//        if type == .paramDev {
+//            dictionaryTmp["ids_dev"] = deviceId
+//            dictionaryTmp["sno"] = sno
+//            let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
+//            guard let result = convertIntArrToStringArr(intArr: res) else {
+//                print("error in createBinaryString")
+//                return ["0"]
+//            }
+//            return result
+//        }
+//        return stringArr
+//    }
     
     func createBinaryStringToSetImage(//self
                                         type: TypeOfPacket,isBmp: Int,
@@ -159,12 +159,12 @@ class CreateBinaryPacketToSend {
                 
                 
                 //let res = CodeLib.shared.parseJson(obj: dictionaryTmp, sno: &sno)
-                let res = tlv.shared.parseJson(dictionaryTmp, &sno)
-                guard let result = convertIntArrToStringArr(intArr: res) else {
-                    print("error in createBinaryStringToSetImage")
-                    return ["0"]
-                }
-                return result
+                //let res = tlv.shared.parseJson(dictionaryTmp, &sno)
+                //guard let result = convertIntArrToStringArr(intArr: res) else {
+//                        print("error in createBinaryStringToSetImage")
+//                        return ["0"]
+//                }
+//                return result
                 
             } else if isBmp == 0 {
                 print("Not done yet!")

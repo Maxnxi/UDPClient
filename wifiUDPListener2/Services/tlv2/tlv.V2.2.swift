@@ -1,12 +1,5 @@
 //
 //  tlv.swift
-//  wifiUDPListener2
-//
-//  Created by Maksim on 20.09.2021.
-//
-
-//
-//  tlv.swift
 //  Waadsu
 //
 //  Created by Assylzhan Nurlybekuly on 01.08.2021.
@@ -15,6 +8,7 @@
 import Foundation
 import Compression
 import UIKit
+import CoreGraphics
 
 extension Array where Element == Int {
     public mutating func writeInt(_ value:Int,_ bytes:Int,_ direction:String?) {
@@ -54,7 +48,6 @@ final class tlv {
         "pgm_flicker": 0x2D,
         "imsi": 0x12C
     ]
-    
     private func parseCommand(_ obj:[String:Any]? , _ sno:Int)->[[Int]]?{
         var pkt = [Int]()
         var bin_code:Int? = nil
@@ -154,7 +147,7 @@ final class tlv {
             pkt.append(3)
             pkt.append(ani["model_normal"]! as! Int)
             pkt.append(ani["speed"]! as! Int - 1)
-            pkt.append((item["isGif"] != nil) ? 0 : ani["time_stay"]! as! Int)
+            pkt.append((item["isGif"] as! Int != 0) ? 0 : ani["time_stay"]! as! Int)
         }
         
         // Writing data item control block
@@ -208,12 +201,10 @@ final class tlv {
         result.append(cmd)
         result = result + pkt
         if (version & 0x80 == 0x80) {
-            print("version bitwise condition passed")
             var cs = 0
             for idx in offset..<result.count {
                 cs += result[idx]
             }
-            print(cs)
             result.writeInt(cs, 2, nil)
         }
         return result
@@ -252,23 +243,24 @@ final class tlv {
             height ^= 0xffffffff
             height += 1
         }
-        print(height)
+//        print("width: \(width) and height: \(height)")
+        width = 64
         height = 64
-        print("width: \(width) and height: \(height)")
         let tmp:Double = Double((width * 3) / 4)
         let rowStripe = (tmp - floor(tmp)) > 0 ? (Int(tmp + 1) * 4) : Int(tmp * 4)
-        let imgSize = rowStripe * Int(height) + 0x36
-        print("Row stripe: \(rowStripe) and image size: \(imgSize)")
-        var countPage = Int(img.count / imgSize)
+        let imgSize = rowStripe * Int(height)
+//        print("Row stripe: \(rowStripe) and image size: \(imgSize)")
+        let countPage = Int(img.count / imgSize)
         print("Img count: \(img.count)")
         print("Count page: \(countPage)")
         let typeColor = (prop["type_color"] as? Int) != nil ? prop["type_color"]! as! Int : 3
         let gray = (prop["gray"] as? Int) != nil ? prop["gray"]! as! Int : 4
+        
 //        var pkt = makeDataPropertyProgram(prop , region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
 //        var writeLengthFlag :Bool? = nil
 //        pkt = makePacket(pkt, sno, 0x41, 2, &writeLengthFlag)
-//        sno += 1
 //        pkts.append(pkt);
+        sno += 1
         
         var pkt = [Int]()
         writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
@@ -279,13 +271,12 @@ final class tlv {
                 }
             }
         }
-        
-        
+       
+    
         if (delay_frame.count > 0) {
             outImg += delay_frame
             writeGifImageFrameHeader(&pkt, item, prop, UInt32(width), UInt32(height), countPage, typeColor, gray)
         } else {
-            print("ImageFrameHeader")
             writeImageFrameHeader(&pkt, item, prop, Int(width), Int(height), countPage, typeColor, gray)
         }
         var flag:Bool? = nil
@@ -298,11 +289,6 @@ final class tlv {
         if let g = item["gamma"] as? Double{
             gammaCoeff = g
         }
-        // just original code in js
-        //        if ("gamma" in item) {
-        //            gammaCoeff = item.gamma || 1.6;
-        //        }
-        
         for idx in 0..<256 {
             var gammaVal = pow(((Double(idx) + 0.5)/256.0), gammaCoeff)
             gammaVal = (gammaVal * 256.0) - 0.5;
@@ -310,10 +296,11 @@ final class tlv {
         }
         print("Gray: \(gray)")
        
+        
         for pageNo in 0..<countPage {
-            let offset = pageNo * imgSize + 0x36;
+            let offset = pageNo * imgSize
             
-            for idx in 0..<imgSize-offset{
+            for idx in 0..<img.count-offset{
                 img[offset + idx] = UInt8(gamma[Int(img[offset + idx])])
             }
             for bit in 0..<(gray+1) {
@@ -326,21 +313,8 @@ final class tlv {
                 }
             }
         }
-//        var temp = [Int]()
-//        print(temp_image)
-//
-//        var temp2 = getColorMatrix(temp_image, 0x36, &temp, Int(width), Int(height), rowStripe, 2, 7);
-//        print(temp2)
-//        if (temp != temp2){
-//            print("ERROR! NOT THE SAME")
-//            print("ERROR! NOT THE SAME")
-//            print("ERROR! NOT THE SAME")
-//        }
-//        print("TEMP:")
-//        print(temp)
-//        print("OUTIMAGE COUNT: \(outImg.count)")
     }
-    private func makeGifData(_ pkts: inout [[Int]], _ img:[Int], _ outImg: inout [Int], _ item:[String:Any], _  prop:[String:Any], _ region:[String:Any], _ idPro:Int,_  idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
+    private func makeGifData(_ pkts: inout [[Int]], _ img:[UInt8], _ outImg: inout [Int], _ item:[String:Any], _  prop:[String:Any], _ region:[String:Any], _ idPro:Int,_  idRect:Int, _ idItem:Int, _ dataSave:Int, _ sno: inout Int) {
         let tmp = (prop["width"]! as! Int * 3) / 4
         let rowStripe = (tmp - Int(tmp)) > 0 ? Int(tmp + 1) * 4 : tmp * 4
         let imgSize = rowStripe * (prop["height"]! as! Int) + 0x36
@@ -359,7 +333,7 @@ final class tlv {
         
         var pkt = makeDataPropertyProgram(prop, region["info_pos"]! as! [String:Any], idPro, prop["width"]! as! Int, prop["height"]! as! Int, dataSave)
         var flag:Bool? = nil
-        pkt = makePacket(pkt, sno, 0x41, 2, &flag)
+        pkt = makePacket(pkt, sno, 0xC1, 2, &flag)
         sno += 1
         pkts.append(pkt)
         pkt = [Int]()
@@ -376,16 +350,39 @@ final class tlv {
         pkt.writeInt(0x100,3, nil)
         pkt.append(10)
         var flag2:Bool? = nil
-        pkt = makePacket(pkt, sno, 0x41, 2, &flag2)
+        pkt = makePacket(pkt, sno, 0xC1, 2, &flag2)
         sno += 1
         pkts.append(pkt)
-        outImg += img   //        img.map(val => outImg.push(val))
+        for byte in img {
+            outImg.append(Int(byte))
+        }
+//        outImg += img   //        img.map(val => outImg.push(val))
     }
-    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
-        // In Javascrirpt
-        //        if (! "pkts_program" in obj) {
-        //            return null;
-        //        }
+    public func parseUIImage(uiimage: UIImage?)->[String]?{
+        guard let image = uiimage else {return nil}
+        guard let path = Bundle.main.path(forResource: "tests", ofType: "json") else { return nil}
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            let tests = try JSONDecoder().decode(Tests.self, from: data)
+            var sno = 4294901762
+            let obj = try tests[5].json.asDictionary()
+            guard let pkts = getListOfPackets(obj, &sno, image: image) else {return nil}
+            var str = ""
+            var output = [String]()
+            for pkt in pkts{
+                for byte in pkt {
+                    str += String(format:"%02X", byte)
+                }
+                output.append(str)
+                str = ""
+            }
+            return output
+        }catch {
+           print("Error while converting into data")
+        }
+        return nil
+    }
+    private func getListOfPackets(_ obj:[String:Any], _ sno: inout Int, image: UIImage)->[[Int]]?{
         guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
         guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
         
@@ -404,67 +401,116 @@ final class tlv {
         if let id_rect = region?["id_rect"] as? Int {
             idRect = id_rect - 1
         }
-        // in JavaScript
-        //        if ("id_rect" in region) {
-        //            idRect = ~~region.id_rect - 1;
-        //        }
+
         let item = (region?["list_item"]! as! [[String:Any]]).first
         var idItem = 0
         if let id_item = region?["id_item"] as? Int {
             idItem = id_item - 1
         }
-        // in JavaScript
-        //        if ("id_item" in item) {
-        //            idItem = ~~region.id_item - 1;
-        //        }
-        //
+    
+        guard let bmp_data = image.toData(options: [:], type: .bmp) else {return nil}
         
+        var img = [UInt8](bmp_data)
+        img.removeFirst(0x36)    // remove header , because width and size should be 64x64
        
+            // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+        if prop["send_gif_src"] as! Int != nil {
+            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+            //                    sno += 2
+        }
+        else{
+            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+            //            sno += 2
+        }
+
+        
+        let totalImgDataSize = outImg.count
+        let maxBlockSize = 0x400
+        let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
+        
+        for currentBlock in 0..<totalBlocks {
+            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
+            let block = Array(data_slice)
+            outImg.removeFirst(min(outImg.count,maxBlockSize))
+            var pkt = [Int]()
+            writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
+            pkt.writeInt(0x712,2,nil)
+            pkt.writeInt(totalBlocks,2,nil)
+            pkt.writeInt(currentBlock,2, nil)
+            pkt.writeInt(maxBlockSize,2,nil)
+            pkt.writeInt(0x1300,2, nil)
+            writeLenLen(&pkt, block.count)
+            
+            pkt += block
+            var flag:Bool? = nil
+            pkt = makePacket(pkt, sno, 0x41, 2, &flag)
+            //                    sno += 1
+            pkts.append(pkt)
+        }
+        return pkts
+        
+    }
+    public func parseCompressedImage(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
+        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
+        guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
+        
+        var pkts = [[Int]]()
+        var pkt = [Int]()
+        let idPro = (pgm["id_pro"]! as! Int ) - 1
+        var dataSave = 0
+        var outImg = [Int]()
+        
+        if let ds = pgm["data_save"] as? Int{
+            dataSave = ds
+        }
+        let region = (pgm["list_region"]! as! [[String:Any]]).first
+        var idRect = 0
+        
+        if let id_rect = region?["id_rect"] as? Int {
+            idRect = id_rect - 1
+        }
+
+        let item = (region?["list_item"]! as! [[String:Any]]).first
+        var idItem = 0
+        if let id_item = region?["id_item"] as? Int {
+            idItem = id_item - 1
+        }
+    
         guard let zipBmp = item?[(prop["send_gif_src"] as! Int != 0) ? "zip_gif" : "zip_bmp"] as? String else {
             print("Error there is no base64String?")
             return nil
         }
 
-        guard var data = Data(base64Encoded: zipBmp) else { return nil }
-        var byteArray = [UInt8](data)
+        guard let data = Data(base64Encoded: zipBmp) else { return nil }
         
-        let byteArray_slice = byteArray[6...]   // откидывает первые 6 байтов
-        byteArray = Array(byteArray_slice)
         
-        let nsdata = NSData(bytes: byteArray as [UInt8], length: byteArray.count)
-        
-        do {
+        do{
             if #available(iOS 13.0, *) {
-            
                 
-                let decompressedData = try (nsdata as NSData).decompressed(using: .zlib)
-
-                print("Full data count:\(decompressedData.count)")
-                var fullByteArray = [UInt8](Data(referencing: decompressedData))
-                print(fullByteArray)
+                let decompressedData = try (data as NSData).decompressed(using: .zlib)
+                var img = [UInt8](Data(referencing: decompressedData))
                 
-                let uiimage = UIImage(named: "monster")
-                guard let data = uiimage?.toData(options: [:], type: .bmp) else {return nil}
-                var img = [UInt8](data)
+                img.removeFirst(0x36)
                 
-                print(img)
-                if prop["send_gif_src"] as! Int == 0 {
+                // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+                if prop["send_gif_src"] as! Int != nil {
+                
                     makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
-//                    sno += 2
+                    //                    sno += 2
                 }
-        //        else{
-        //            makeGifData(&pkts, img!, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
-        //            sno += 2
-        //        }
-               
+                else{
+                    makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+                    //            sno += 2
+                }
+
                 
                 let totalImgDataSize = outImg.count
                 let maxBlockSize = 0x400
                 let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
-                print(totalBlocks)
+                
                 for currentBlock in 0..<totalBlocks {
-                    var data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
-                    var data = Array(data_slice)
+                    let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
+                    let block = Array(data_slice)
                     outImg.removeFirst(min(outImg.count,maxBlockSize))
                     var pkt = [Int]()
                     writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
@@ -473,51 +519,141 @@ final class tlv {
                     pkt.writeInt(currentBlock,2, nil)
                     pkt.writeInt(maxBlockSize,2,nil)
                     pkt.writeInt(0x1300,2, nil)
-                    writeLenLen(&pkt, data.count)
+                    writeLenLen(&pkt, block.count)
                     
-                    pkt += data
+                    pkt += block
                     var flag:Bool? = nil
                     pkt = makePacket(pkt, sno, 0x41, 2, &flag)
-//                    sno += 1
+                    //                    sno += 1
                     pkts.append(pkt)
                 }
                 return pkts
             } else {
                 // Fallback on earlier versions
             }
-           
-        } catch {
-            print("ERROR: second method")
-            print(error.localizedDescription)
+            
+        }catch{
+            print("Error catched while parsing compressed Image")
         }
         
+        
+        return nil
+    }
+    private func  parsePacketsProgram(_ obj:[String:Any], _ sno: inout Int)->[[Int]]? {
+
+        guard let pgm = obj["pkts_program"] as? [String:Any]  else {return nil}
+        guard let prop = pgm["property_pro"] as? [String:Any]  else {return nil}
+        
+        var pkts = [[Int]]()
+        var pkt = [Int]()
+        let idPro = (pgm["id_pro"]! as! Int ) - 1
+        var dataSave = 0
+        var outImg = [Int]()
+        
+        if let ds = pgm["data_save"] as? Int{
+            dataSave = ds
+        }
+        let region = (pgm["list_region"]! as! [[String:Any]]).first
+        var idRect = 0
+        
+        if let id_rect = region?["id_rect"] as? Int {
+            idRect = id_rect - 1
+        }
+
+        let item = (region?["list_item"]! as! [[String:Any]]).first
+        var idItem = 0
+        if let id_item = region?["id_item"] as? Int {
+            idItem = id_item - 1
+        }
+    
+        guard let zipBmp = item?[(prop["send_gif_src"] as! Int != 0) ? "zip_gif" : "zip_bmp"] as? String else {
+            print("Error there is no base64String?")
+            return nil
+        }
+
+        guard let data = Data(base64Encoded: zipBmp) else { return nil }
+        
+        
+        var img = [UInt8]()
+        
+        // тут будет идти только makeBmpData    TO DO: поменять if statement чтобы она выбирала функцию по модели рюкзака
+        if prop["send_gif_src"] as! Int != nil {
+            var count = 0
+            CGifManager.shared.getSequence(imageData: data) { allFrames in    // allFrames = [UIImage] = все фреймы в гифк
+                for frame in allFrames {
+                    
+                    guard let bmp_data = frame.toData(options: [:], type: .bmp) else {return}
+                    
+                    var frame_bytes = [UInt8](bmp_data)
+                    frame_bytes.removeFirst(54) // remove header only raw data
+                    if (count>=72){
+                        img += frame_bytes
+                    }
+                    count += 1
+                }
+            }
+            
+            print("FRAMES ADDED: \(count)")
+            
+            makeBmpData(&pkts, &img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+            //                    sno += 2
+        }
+        else{
+            img = [UInt8](data)
+            makeGifData(&pkts, img, &outImg, item!, prop, region!, idPro, idRect, idItem, dataSave, &sno)
+            //            sno += 2
+        }
+
+        
+        let totalImgDataSize = outImg.count
+        let maxBlockSize = 0x400
+        let totalBlocks = Int((totalImgDataSize + maxBlockSize - 1) / maxBlockSize)
+        
+        for currentBlock in 0..<totalBlocks {
+            let data_slice = outImg[0..<min(outImg.count,maxBlockSize)]  //var data = outImg.splice(0, maxBlockSize)
+            let block = Array(data_slice)
+            outImg.removeFirst(min(outImg.count,maxBlockSize))
+            var pkt = [Int]()
+            writePropertyTags(&pkt, dataSave, idPro, idRect, idItem)
+            pkt.writeInt(0x712,2,nil)
+            pkt.writeInt(totalBlocks,2,nil)
+            pkt.writeInt(currentBlock,2, nil)
+            pkt.writeInt(maxBlockSize,2,nil)
+            pkt.writeInt(0x1300,2, nil)
+            writeLenLen(&pkt, block.count)
+            
+            pkt += block
+            var flag:Bool? = nil
+            pkt = makePacket(pkt, sno, 0x41, 2, &flag)
+            //                    sno += 1
+            pkts.append(pkt)
+        }
+        return pkts
         
         //          TO DO:
         //        require('fs').writeFileSync(`./img.${prop.send_gif_src ? "gif" : "bmp"}`, img)
-               
-               
- 
-        return nil
     }
     
-    public func parseJson(_ obj:[String:Any], _ sno: inout Int) -> [[Int]]?{
+    public func parseJson(_ obj:[String:Any], _ sno: inout Int) -> [String]?{
+        var p: [[Int]]? = nil
         if obj["pkts_program"] != nil {
-            return parsePacketsProgram(obj, &sno)
+            p = parsePacketsProgram(obj, &sno)
         }else if obj["cmd"] != nil {
-            return parseCommand(obj, sno)
+            p =  parseCommand(obj, sno)
         }else{
             print("Incorrect object passed")
-//            fatalError("Incorrect object passed")
         }
-        // in JavaScript
-        //        if ("pkts_program" in obj) {
-        //            return parsePacketsProgram(obj, sno);
-        //        } else if ("cmd" in obj) {
-        //            return parseCommand(obj, sno);
-        //        } else {
-        //            throw new Error("Incorrect object passed");
-        //        }
-        return nil
+        guard let pkts = p else {return nil}
+        var str = ""
+        var output = [String]()
+        for pkt in pkts{
+            for byte in pkt {
+                str += String(format:"%02X", byte)
+            }
+            output.append(str)
+            str = ""
+        }
+        return output
     }
     private func readDevInfo(_ payload:[UInt8], _ sno:Int)->[AnyHashable:Any]? {
         //let string = payload.toString("ascii");
@@ -851,8 +987,8 @@ final class tlv {
             return nil
         }
     
-        let snoHigh = readUInt16LE(pkt, 6) // pkt.readUInt16LE(6)
-        let snoLow = readUInt16LE(pkt, 2) //pkt.readUInt16LE(2)
+        let snoHigh = readUInt16LE(pkt, 6)
+        let snoLow = readUInt16LE(pkt, 2)
         let sno = UInt64(snoHigh) + UInt64(snoLow)*0x10000 // let sno = Number(BigInt(snoHigh) + BigInt(snoLow) * 0x10000n);
 //        let pkt_len = readUInt16LE(pkt, 4) // pkt.readInt16LE(4);
         let pkt_len = readUInt16LE(pkt, 4)
@@ -963,23 +1099,6 @@ final class tlv {
         return result
     }
     private func readUInt32LE(_ img:[UInt8], _ offset: Int) -> Int{
-        
-        // old implementation from stackoverflow
-        
-//        let stream = InputStream(data: Data(bytes: img, count: img.count))
-//        stream.open()
-//        defer { stream.close() }
-//
-//        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: img.count)
-//        defer { buffer.deallocate(capacity: img.count) }
-//        guard stream.read(buffer, maxLength: img.count) >= img.count else {
-//            // handle all cases: end of stream, error, waiting for more data to arrive...
-//            fatalError()
-//        }
-//        let number = UnsafeRawPointer(buffer).load(fromByteOffset: offset,as: UInt32.self)
-//        return number.littleEndian
-        
-        // manual implementation
         if offset+3>=img.count {return 0}
         var str = ""
         str += String(img[offset+3],radix: 16)
@@ -989,25 +1108,6 @@ final class tlv {
         return Int(str, radix: 16) ?? 0
     }
     private func readUInt16LE(_ img:[UInt8], _ offset: Int) -> Int{
-        
-        // old implementation from stackoverflow
-        
-//        let stream = InputStream(data: Data(bytes: img, count: img.count))
-//        stream.open()
-//        defer { stream.close() }
-//
-//        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: img.count)
-//        defer { buffer.deallocate(capacity: img.count) }
-//        guard stream.read(buffer, maxLength: img.count) >= img.count else {
-//            // handle all cases: end of stream, error, waiting for more data to arrive...
-//            fatalError()
-//        }
-//
-//        let number = UnsafeRawPointer(buffer).load(fromByteOffset: offset,as: Int16.self)
-//        return number.littleEndian
-        
-        
-        // manual implementation
         if offset+1>=img.count {return 0}
         var str = ""
         str += String(img[offset+1],radix: 16)
@@ -1015,77 +1115,41 @@ final class tlv {
         return Int(str, radix: 16) ?? 0
     }
     private func readUInt8(_ img:[UInt8], _ offset: Int) -> UInt8 {
-        
-        // old implementation from stackoverflow
-        
-//        let stream = InputStream(data: Data(bytes: img, count: img.count))
-//        stream.open()
-//        defer { stream.close() }
-//
-//        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: img.count)
-//        defer { buffer.deallocate(capacity: img.count) }
-//        guard stream.read(buffer, maxLength: img.count) >= img.count else {
-//            // handle all cases: end of stream, error, waiting for more data to arrive...
-//            fatalError()
-//        }
-//        let number = UnsafeRawPointer(buffer).load(fromByteOffset: offset,as: UInt8.self)
-//        return number
-        
-        // manual implementation
         return img[offset]
     }
     
-}
-extension String {
-    //: ### Base64 encoding a string
-    func base64Encoded() -> String? {
-        if let data = self.data(using: .utf8) {
-            return data.base64EncodedString()
-        }
-        return nil
-    }
-    
-    //: ### Base64 decoding a string
-    func base64Decoded() -> String? {
-        if let data = Data(base64Encoded: self) {
-            return String(data: data, encoding: .utf8)
-        }
-        return nil
-    }
-    func toArrayofInt()->[Int]? {
-        let array:[Int]? = self.compactMap { char in
-            char == "0" ? 0 : char == "1" ? 1 : nil
-        }
-        return array
-    }
-}
-extension Data {
-    struct HexEncodingOptions: OptionSet {
-        let rawValue: Int
-        static let upperCase = HexEncodingOptions(rawValue: 1 << 0)
-    }
-    
-    func hexEncodedString(options: HexEncodingOptions = []) -> String {
-        let format = options.contains(.upperCase) ? "%02hhX" : "%02hhx"
-        return self.map { String(format: format, $0) }.joined()
-    }
+//    private func pixelValuesFromImage(cgImage: CGImage?) -> ([UInt8]?, width: Int, height: Int)
+//    {
+//        var width = 0
+//        var height = 0
+//        var pixelValues: [UInt8]?
+//        
+//        guard let imageRef = cgImage else {return (nil,0,0)}
+//        width = imageRef.width
+//        height = imageRef.height
+//        let bitsPerComponent = imageRef.bitsPerComponent
+//        let bytesPerRow = imageRef.bytesPerRow
+//        let totalBytes = height * bytesPerRow
+//        
+//        let colorSpace = CGColorSpaceCreateDeviceGray()
+//        //        let colorSpace = CGColorSpaceCreateDeviceRGB()
+//        var buffer = [UInt8]()
+//        for i in 0..<totalBytes {
+//            buffer.append(0)
+//        }
+//        let mutablePointer = UnsafeMutablePointer<UInt8>(mutating: buffer)
+//        
+//        let contextRef = CGContext(data: mutablePointer, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: 0)
+//        CGContextDrawImage(contextRef, CGRectMake(0.0, 0.0, CGFloat(width), CGFloat(height)), imageRef)
+//        
+//        let bufferPointer = UnsafeBufferPointer<UInt8>(start: mutablePointer, count: totalBytes)
+//        pixelValues = Array<UInt8>(arrayLiteral: bufferPointer)
+//        
+//
+//        return (pixelValues, width, height)
+//    }
 }
 
-// string.match() in JavaScript
-func matches(for regex: String, in text: String) -> [String] {
-    
-    do {
-        let regex = try NSRegularExpression(pattern: regex)
-        let results = regex.matches(in: text,
-                                    range: NSRange(text.startIndex..., in: text))
-        return results.map {
-            String(text[Range($0.range, in: text)!])
-        }
-    } catch let error {
-        print("invalid regex: \(error.localizedDescription)")
-        return []
-    }
-}
 
 
 
