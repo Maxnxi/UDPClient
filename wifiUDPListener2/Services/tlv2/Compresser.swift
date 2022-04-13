@@ -51,7 +51,7 @@ private func perform(_ operation: CompressionOperation,
   var streamPointer = UnsafeMutablePointer<compression_stream>
     .allocate(capacity: 1)
   defer {
-    streamPointer.deallocate(capacity: 1)
+//    streamPointer.deallocate(capacity: 1)
   }
   
   // initialize the stream
@@ -68,7 +68,7 @@ private func perform(_ operation: CompressionOperation,
   let dstSize = workingBufferSize
   let dstPointer = UnsafeMutablePointer<UInt8>.allocate(capacity: dstSize)
   defer {
-    dstPointer.deallocate(capacity: dstSize)
+//    dstPointer.deallocate(capacity: dstSize)
   }
   
   // process the input

@@ -13,10 +13,8 @@ public enum StateOfSocket {
 
 class SocketGateway {
     
-    //var isFinished: Bool = false
     //Pause Timer
     var pauseTimer = Timer()
-    //var isPaused: Bool = false
     var countPauseSeconds: Double = 0.0 {
         didSet {
             print("Pause Timer: ", countPauseSeconds)
@@ -25,7 +23,6 @@ class SocketGateway {
             }
         }
     }
-    //end
     
     //Counter of main loops // количество полных повторных загрузок = 1
     var inceptionCounter: Int = 0 {
@@ -34,13 +31,6 @@ class SocketGateway {
             if inceptionCounter == 2 {
                 currentState = .finishWithError
             }
-        }
-    }
-    //end
-    
-    var totalCountOfPackets: Int {
-        didSet {
-            print("Total Count setted")
         }
     }
     
@@ -56,10 +46,10 @@ class SocketGateway {
     }
     //номер пакета для отправки (из массива)
     var numberOfPacket: Int = 0
-    var messageArr: [String]
+    var packets: [Data] = [Data]()
     
     //Сокет
-    let socket: SocketUDP
+    let socket: SocketUDP = SocketUDP()
     
     //статус сокета
     var currentState: StateOfSocket? {
@@ -70,7 +60,7 @@ class SocketGateway {
             
             if currentState == .readyToSend {
                 //isPaused = false
-                if numberOfPacket == totalCountOfPackets {
+                if numberOfPacket == packets.count {
                     finishState()
                 } else {
                     print("Ready To send")
@@ -94,49 +84,36 @@ class SocketGateway {
     
     //main
     init(messageArr: [String]) {
-        
-        self.messageArr = messageArr
-        self.totalCountOfPackets = messageArr.count
-        
-        socket = SocketUDP()
-        socket.socketDelegate = self
-
-        if messageArr.count >= 3 {
-            print("Inited")
-            print("Element #1 of array")
-            print(messageArr[0])
-            print("Element #2 of array")
-            print(messageArr[1])
-            print("Element #3 of array")
-            print(messageArr[2])
+        self.packets = [Data]()
+        for str in messageArr {
+            guard let binData = str.hexadecimal else {return}
+            self.packets.append(binData)
         }
-        
-//        repeat {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-//                if self.isFinished == true {
-//                    completion()
-//                }
-//            }
-//
-//        } while isFinished == true
+        socket.socketDelegate = self
     }
-    
+ 
+    init(packets: [[UInt8]]) {
+        
+        self.packets = [Data]()
+        for packet in packets {
+            self.packets.append(Data(packet))
+        }
+        socket.socketDelegate = self
+    }
+
     deinit {
         print("Object SocketGateway deinit")
     }
-    
+        
     public func startSend() {
         currentState = .readyToSend
-//        socket?.socketDelegate = self
     }
     
     func send(nmbrPckt: Int) {
         if errorCounter == errorLimits {
             currentState = .finishWithError
         }
-        //let socket = SocketUDP(message: messageArr[nmbrPckt])
-        //socket.socketDelegate = self
-        socket.connectSendMessageReceiveAnswer(message: messageArr[nmbrPckt])
+        socket.connectSendMessageReceiveAnswer(message: self.packets[nmbrPckt])
     }
     
     func pauseFunc() {
@@ -209,26 +186,5 @@ extension SocketGateway {
                 timer.invalidate()
             }
         }
-        //version #2
-        //let timer = Timer.scheduledTimer(timeInterval: TimeInterval(0.25), target: self, selector: #selector(timerAction(timer:)), userInfo: nil, repeats: true)
-        //pauseTimer.fire()
-        //version #1
-//        let timeQueue = DispatchQueue(label: "Timer")
-//        timeQueue.async {
-            
-//            self.pauseTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { timer in
-////                    DispatchQueue.main.async {
-//                    self.countPauseSeconds += 0.25
-////                        print("timer: ", self.countPauseSeconds)
-////                    }
-////                }
-//
-//        }
-        
     }
-    
-//    @objc func timerAction(timer:Timer!) {
-//        countPauseSeconds += 0.25
-//        print(#function)
-//    }
 }

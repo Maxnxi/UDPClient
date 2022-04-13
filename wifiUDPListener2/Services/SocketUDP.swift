@@ -39,12 +39,6 @@ class SocketUDP {
         
     init() {
         //Параметры - чтобы bind исходящий порт, не заработало
-       
-        
-//        params.allowLocalEndpointReuse = true
-//        params.allowFastOpen = true
-//        self.connection = NWConnection(host: hostUDP, port: portUDP, using: params)
-        
         print("SocketUDP inited")
     }
     
@@ -53,12 +47,8 @@ class SocketUDP {
         print("socketUDP deinit")
     }
           
-    public func connectSendMessageReceiveAnswer(message: String) {
-        // Transmited message:
-        //params.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.any), port: 58787)
-        //params.allowLocalEndpointReuse = true
-        //self.connection = NWConnection(host: hostUDP, port: portUDP, using: params)
-        mySConnection.stateUpdateHandler = { (newState) in
+    public func connectSendMessageReceiveAnswer(message: Data) {
+        mySConnection.stateUpdateHandler = { newState in
             print("This is stateUpdateHandler:")
             switch (newState) {
             case .ready:
@@ -85,72 +75,64 @@ class SocketUDP {
             print("Error in converting")
             return
         }
-//  print("Data to send", contentToSendUDP as Any)
-        mySConnection.send(content: contentToSendUDP, completion: NWConnection.SendCompletion.contentProcessed({ error in
-            if error == nil {
-                self.socketDelegate?.increasePacketNumber()
-                print("Send succeded")
-                self.sendPackId += 1
-                print("Send id # ", self.sendPackId)
-                self.socketDelegate?.changeStateofSocket(state: .pause)
-            } else {
-                print("Error while sending udp packet", error as Any)
-                self.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
-            }
-        })
+        self.sendUDP(message: contentToSendUDP)
+    }
+
+    private func sendUDP(message: [UInt8]) {
+        let contentToSendUDP = Data(message)
+        self.sendUDP(message: contentToSendUDP)
+    }
+
+    private func sendUDP(message: Data) {
+        mySConnection.send(content: message, completion: NWConnection.SendCompletion.contentProcessed({ error in
+                if error == nil {
+                    self.socketDelegate?.increasePacketNumber()
+                    print("Send succeded")
+                    self.sendPackId += 1
+                    print("Send id # ", self.sendPackId)
+                    self.socketDelegate?.changeStateofSocket(state: .pause)
+                } else {
+                    print("Error while sending udp packet", error as Any)
+                    self.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
+                }
+            })
         )
     }
 
-          private func receiveUDP() {
-            mySConnection.receiveMessage { [weak self] (data, context, isComplete, error) in
-                if (isComplete) {
-                    guard let stringHex = data?.hexadecimal else {
-                        print("Error in receiveUDP")
-                        return
-                    }
-                    print("Receive is complete", stringHex)
-                    let dictionaryResult = DecodeLib.shared.parseBinAndReturnView(string: stringHex)
-                    guard let resultStr = dictionaryResult["cmd"] as? String else {
-                        print("Error in getting data from parsed in SocketUDP.receiveUDP")
-                        return
-                    }
-                    
-                    if resultStr == "ok" {
-                        print("ReceiveUDP - ok")
-                        self?.socketDelegate?.changeStateofSocket(state: .readyToSend)
-
-                    }
-/*
-                     else if resultStr == "failed" {
-                        print("ReceiveUDP - failed")
-                        self?.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
-                        
-                    } else if resultStr == "failedGuard" {
-                        print("ReceiveUDP - failedGuard")
-                        self?.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
-
-                    }
-*/
-                    else {
-                        print("Else situation in receiveUDP")
-                        self?.socketDelegate?.changeStateofSocket(state: .readyToSend)
-                    }
-                    
-                    
-                    
-                } else if (isComplete == false && error != nil) {
-                    self?.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
+      private func receiveUDP() {
+        mySConnection.receiveMessage { [weak self] (data, context, isComplete, error) in
+            if (isComplete) {
+                guard let stringHex = data?.hexadecimal else {
+                    print("Error in receiveUDP")
+                    return
                 }
-              }
+                print("Receive is complete", stringHex)
+                let dictionaryResult = DecodeLib.shared.parseBinAndReturnView(string: stringHex)
+                guard let resultStr = dictionaryResult["cmd"] as? String else {
+                    print("Error in getting data from parsed in SocketUDP.receiveUDP")
+                    return
+                }
+                
+                if resultStr == "ok" {
+                    print("ReceiveUDP - ok")
+                    self?.socketDelegate?.changeStateofSocket(state: .readyToSend)
+
+                }
+                else {
+                    print("Else situation in receiveUDP")
+                    self?.socketDelegate?.changeStateofSocket(state: .readyToSend)
+                }
+                
+                
+                
+            } else if (isComplete == false && error != nil) {
+                self?.socketDelegate?.changeStateofSocket(state: .needToSendPreviousAgain)
+            }
           }
+      }
         
     public func closeSocket() {
-        //connection.cancel()
         let tmpConnection = mySConnection
-//        else {
-//            print("Error in closeSocket")
-//            return
-//        }
         tmpConnection.stateUpdateHandler = nil
         tmpConnection.viabilityUpdateHandler = nil
         tmpConnection.betterPathUpdateHandler = nil
